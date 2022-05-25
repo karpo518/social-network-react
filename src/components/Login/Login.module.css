@@ -1,0 +1,42 @@
+.form {
+    max-width: 200px;
+}
+
+.form input[type=text], 
+.form input[type=password]
+{
+   margin: 5px 0px;
+   width: 100%;
+   max-width: 100%;
+}
+
+.form .checkbox label {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.checkboxWrap .formControl {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.form button.submit {
+
+    margin-top: 20px;
+}
+.form .fieldContent img {
+    border: 1px solid #333;
+    max-width: 100%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.form label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.form .errors {
+    color: red;
+    margin-top: 10px;
+}

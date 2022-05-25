@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+.app-wrapper {
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 60px 1fr;
+  grid-template-columns: 2fr 10fr;
+  grid-template-areas: 
+  "h h"
+  "n c";
+  width: 1200px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app-wrapper header {
+  grid-area: h;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.app-wrapper-content {
+    grid-area: c;
+    background-color: white;
+    margin: 5px 5px 5px 0px;
+    color: #333;
+    border-right: 5px solid #ff0000bf;
+    border-bottom: 5px solid #ff0000bf;
+    padding: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.app-wrapper-content a {
+    color: #f2242e;
+    
 }
 
-.App-link {
-  color: #61dafb;
+.app-wrapper-content a.active {
+    color: #000;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-wrapper button {
+  color: #f2242e;
+  background: transparent;
+  border:2px solid #f2242e;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.app-wrapper textarea {
+  width: 300px;
+  height: 70px;
+}
+
+.app-wrapper input[type=text],
+.app-wrapper input[type=password],
+.app-wrapper input[type=number],
+.app-wrapper textarea
+{
+  border:2px solid #333;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.app-wrapper input[type=checkbox]
+{
+  margin-left: 0px;
+}
+
+.app-wrapper-content h1
+{
+  margin-top: 0px;
+}
+
+.clear {
+  clear: both;
 }

@@ -1,0 +1,50 @@
+.image {
+    max-width: 100%;
+}
+
+.avatar {
+    max-width: 150px;
+}
+
+.descriptionBlock 
+{
+    padding: 10px;
+}
+
+.aboutItem {
+    margin-bottom: 10px;
+    max-width: 100%;
+    word-break: break-all;
+}
+
+.aboutTitle {
+    font-weight: bold;
+}
+
+span.aboutTitle {
+    margin-right: 5px;
+}
+
+.contactsBlock {
+    margin-top: 10px;
+}
+
+.contactList {
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 0px;
+    list-style-type: none;
+}
+
+.contactList span.aboutTitle {
+    font-weight: normal;
+}
+
+.description {
+    margin-top: 10px;
+}
+
+.fullName {
+    color: #f2242e;
+    font-weight: bold;
+}

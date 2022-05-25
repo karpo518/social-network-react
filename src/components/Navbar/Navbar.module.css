@@ -1,0 +1,66 @@
+.nav {
+    grid-area: n;
+    padding: 20px;
+    background-color: #ff0000bf;
+    margin: 5px;
+    color: #333;
+  }
+
+.nav a,
+.nav ul li
+{
+  color: white;
+} 
+
+.item a {
+    text-decoration: none;
+}  
+
+.menu ul {
+  padding-left: 20px;
+}
+
+.friends {
+  margin-top: 40px;
+}
+
+.friends ul {
+  text-align: center;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+}
+
+.friends ul li {
+  display: inline-block;
+}
+
+.friends .image {
+  display: inline-block;
+}
+
+.friends .image img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.nav .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.nav ul li a.active {
+
+    color: #333;
+}
+
+.nav .friends li
+{
+    margin: 0px 5px;
+}
+
+.nav .friends a {
+
+    font-size: 12px;
+}

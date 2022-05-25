@@ -1,0 +1,16 @@
+.item {
+    padding: 10px;
+}
+
+.item img {
+    width: 50px;
+    /* height: 50px; */
+    border-radius: 30px;
+}
+
+.item .likesCount {
+    color: #ff0000bf;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}

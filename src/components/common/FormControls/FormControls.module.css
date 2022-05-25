@@ -1,0 +1,20 @@
+.checkboxControl
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.formControl.error input,
+.formControl.error textarea {
+    background-color: #fde0e0; 
+}
+
+.formControl.error .errorText {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.fieldWrap, .labelWrap {
+    display: inline-block;
+    vertical-align: middle;
+}

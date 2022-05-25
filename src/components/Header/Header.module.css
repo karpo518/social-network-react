@@ -1,0 +1,66 @@
+
+.header {
+  grid-area: h;
+  background-color: #ff0000bf;
+  margin: 5px 5px 0px 5px;
+}
+.header .logo {
+  /* width: 20px; */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  float: left;
+}
+
+.header .logo img {
+    height: 40px;
+}
+
+.loginBlock {
+
+  float: right;
+  height: 100%;
+  padding-right: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+}
+
+.loginBlock a, 
+.loginBlock span 
+{
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.loginString img {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    vertical-align: middle;
+}
+
+.hiddenMenu {
+  display: none;
+  top: 100%;
+  right: 0px;
+  left: 0px;
+  position: absolute;
+  background-color: black;
+  z-index: 1000;
+}
+
+.hiddenMenu ul li span {
+  
+    cursor: pointer;
+}
+
+.loginBlock:hover .hiddenMenu {
+  display: block;
+}

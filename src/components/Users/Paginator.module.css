@@ -1,0 +1,24 @@
+.selectedPage {
+    font-weight: bold;
+}
+
+.pagination span{
+    margin: 5px;
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.pagination span.selectedPage {
+    cursor: default;
+}
+
+.pagination span.beforePortion,
+.pagination span.afterPortion {
+    border: 1px solid transparent;
+
+    color: #f2242e;
+    font-weight: bold;
+}

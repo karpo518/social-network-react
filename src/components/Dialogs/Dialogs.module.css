@@ -1,0 +1,86 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 3fr 10fr;
+    position: relative;
+}
+
+.dialogItems {
+    padding: 10px;
+
+}
+
+.selectDialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialogItems .dialog {
+
+    margin: 10px 0px;
+}
+
+.messages {
+    padding: 10px;
+}
+
+.messages .message {
+
+    margin: 10px auto;
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    display: flex;
+    gap: 20px;
+}
+
+.messages .message.incoming {
+
+}
+
+
+.messages .message .author {
+    /* align-self: start; */
+}
+
+.messages .message .body {
+
+    /* align-self: end; */
+    padding-top: 20px;
+}
+
+.messages .message.outgoing {
+    flex-direction: row-reverse;
+}
+
+
+
+.messages .message.outgoing .author{
+    
+}
+
+.messages .message .image {
+    display: inline-block;
+}
+
+.dialogItems .dialog .image img,
+.messages .message .image img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.dialogItems .dialog .image {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.dialogItems .dialog .name {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.form {
+    margin-top: 20px;
+}
