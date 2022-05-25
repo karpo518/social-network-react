@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 
 import HeaderContainer from "./components/Header/HeaderContainer";
@@ -63,14 +63,12 @@ let AppContainer = compose(
 
 const SamuraiJSApp = (props) => {
 
-  console.log(process.env)
-
   return <React.StrictMode>
-  <BrowserRouter basename={process.env.PUBLIC_URL} >
+  <HashRouter basename={process.env.PUBLIC_URL} >
     <Provider store={store}>
     <AppContainer />
     </Provider>
-  </BrowserRouter>
+  </HashRouter>
 </React.StrictMode> 
 }
 
