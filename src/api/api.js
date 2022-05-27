@@ -1,10 +1,15 @@
 import * as axios from "axios";
 
+/* # user karpo518(23678)
+REACT_APP_API_KEY=ca88a817-bcc4-4b1c-ad58-f6ba9d58a4e1
+# user karas518(24133)
+# REACT_APP_API_KEY=c2384874-7056-4df7-bb1e-0932abfb3ff5 */
+
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0/',
     withCredentials: true, 
-    headers: {'API-KEY': process.env.REACT_APP_API_KEY}
+    headers: {'API-KEY': 'ca88a817-bcc4-4b1c-ad58-f6ba9d58a4e1'}
 });
 
 export const usersAPI = {
