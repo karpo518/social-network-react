@@ -1,5 +1,5 @@
 import { stopSubmit } from "redux-form";
-import { profileAPI, authAPI } from "../api/api";
+import { profileAPI, authAPI, updateAPIKey } from "../api/api";
 
 const SET_USER_DATA = "SET-USER-DATA";
 const SET_CAPTHA_URL = "SET_CAPTHA_URL";
@@ -68,6 +68,7 @@ export const login = (formData) => {
     let password = formData.password || "";
     let rememberMe = formData.rememberMe || false;
     let captcha = formData.captcha || "";
+    let apiKey = formData.apiKey || "";
 
     dispatch(toggleIsFetching(true));
 
@@ -80,6 +81,7 @@ export const login = (formData) => {
       let login = response2.data.fullName;
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
+      updateAPIKey(apiKey)
       dispatch(setCaptchaUrl(null));
       dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth));
     } else {
@@ -152,6 +154,7 @@ export const logout = (formData) => {
         null,
         false,
       ];
+      updateAPIKey('')
       dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth))
     }
     console.log(formData);

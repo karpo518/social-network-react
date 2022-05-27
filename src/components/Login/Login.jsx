@@ -9,6 +9,7 @@ const LoginForm = (props) => {
 
       { createField('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
       { createField('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
+      { createField('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
 
       { 
         !props.captchaUrl || 
