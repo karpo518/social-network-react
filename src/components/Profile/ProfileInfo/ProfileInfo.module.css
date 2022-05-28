@@ -4,6 +4,7 @@
 
 .avatar {
     max-width: 150px;
+    border: 1px solid #666;
 }
 
 .descriptionBlock 
@@ -47,4 +48,15 @@ span.aboutTitle {
 .fullName {
     color: #f2242e;
     font-weight: bold;
+}
+.updateAvatarBtn {
+    display: none;
+}
+
+.ownerImage {
+    cursor: pointer;
+}
+
+.startChatWrap {
+    margin: 10px 0px;
 }

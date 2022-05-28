@@ -3,22 +3,50 @@ import defaultPhoto from "../../../assets/images/user.jpg";
 import s from "./ProfileInfo.module.css";
 import { NavLink } from "react-router-dom";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
+import { propTypes } from "redux-form";
+import React from "react";
 
-const ProfileInfo = ({profile, status, updateStatus }) => {
+const ProfileInfo = ({profile, status, updateStatus, isOwner, savePhoto }) => {
+
+  const inputFileRef = React.useRef(null)
+
   if (!profile) {
     return <Preloader />;
   }
 
   let availableContacts = Object.keys(profile.contacts).filter((k) => { return profile.contacts[k]  })
 
+  const onMainPhotoClicked = () => {
+    inputFileRef.current.click()
+  }
+
+  const onMainPhotoSelected = (e) => {
+    if(e.target.files.length) {
+      savePhoto(e.target.files[0])
+    }
+  }
+
   return (
     <div>
       <div className={s.descriptionBlock}>
         <div>
-          <img className={s.avatar} src={profile.photos.large != null ? profile.photos.large : defaultPhoto} alt={'Profile avatar'}/>
+          <img className={s.avatar + (isOwner ? ` ${s.ownerImage}` : '') } 
+               src={profile.photos.large != null ? profile.photos.large : defaultPhoto} 
+               alt={'Profile avatar'}
+               title={isOwner ? 'Click for uploading' : ''} 
+               onClick={onMainPhotoClicked} />
+          {isOwner && (
+              <input className={s.updateAvatarBtn} ref={inputFileRef} type={'file'} onChange={onMainPhotoSelected} />
+            )
+          }
         </div>
-
-        <NavLink to={`/dialogs/${profile.userId}`} className={s.startChat} >Send message</NavLink>
+        
+        {!isOwner && (
+            <div className={s.startChatWrap}>
+              <NavLink to={`/dialogs/${profile.userId}`} >Send message</NavLink>
+            </div>
+          )
+        }
         
         <div className={s.description}>
           <div className={s.aboutItem}>
