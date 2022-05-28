@@ -26,8 +26,8 @@ function withRouter(Component) {
 }
 
 class ProfileContainer extends React.Component {
-  componentDidMount = () => {
-    
+
+  getProfileData = () => {
     let userId = null 
     if(this.props.router.params.userId) {
       userId = this.props.router.params.userId
@@ -44,25 +44,17 @@ class ProfileContainer extends React.Component {
         this.props.getUserProfile(userId);
         this.props.getStatus(userId);
     }
-     
+  }
+
+  componentDidMount = () => {
+    
+    this.getProfileData()
   }
   componentDidUpdate(prevProps) {
     
-    if (prevProps.auth.id !== this.props.auth.id || 
-        prevProps.router.params.userId !== this.props.router.params.userId) {
+    if (prevProps.router.params.userId !== this.props.router.params.userId) {
         
-      let userId = null;
-      if(this.props.router.params.userId) {
-        userId = this.props.router.params.userId
-      }
-      else if(this.props.auth.id) {
-        userId = this.props.auth.id
-      }
-
-      if(userId) {
-        this.props.getUserProfile(userId)
-        this.props.getStatus(userId)
-      }
+        this.getProfileData()
     }
   }
   
