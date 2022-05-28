@@ -75,13 +75,13 @@ export const login = (formData) => {
     let response = await authAPI.login(email, password, rememberMe, captcha);
     dispatch(toggleIsFetching(false));
     if (response.data.resultCode === 0) {
+      updateAPIKey(apiKey)
       let userId = response.data.data.userId;
       let response2 = await profileAPI.getProfile(userId);
       console.log(response2);
       let login = response2.data.fullName;
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
-      updateAPIKey(apiKey)
       dispatch(setCaptchaUrl(null));
       dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth));
     } else {
