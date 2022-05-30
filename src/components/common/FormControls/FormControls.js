@@ -6,6 +6,12 @@ export const InputArea = ({ input, meta: {touched, error}, fieldType, ...props }
 
   return (
     <div className={s.formControl + " " + (hasError ? s.error : "")}>
+      {props.label && props.type !== "checkbox" && (
+        <div className={`${s.labelTextWrap}`}>
+          <label htmlFor={props.id || ""}>{props.label}</label>
+        </div>
+      )}
+      
       <div className={s.fieldWrap}>
         {fieldType === "input" ? (
           <input {...input} {...props} />
@@ -13,9 +19,9 @@ export const InputArea = ({ input, meta: {touched, error}, fieldType, ...props }
           <textarea {...input} {...props} />
         )}
       </div>
-      {props.label && (
-        <div className={s.labelWrap}>
-          <label for={props.id || ""}>{props.label}</label>
+      {props.label && props.type === "checkbox" && (
+        <div className={s.labelCheckboxWrap}>
+          <label htmlFor={props.id || ""}>{props.label}</label>
         </div>
       )}
 

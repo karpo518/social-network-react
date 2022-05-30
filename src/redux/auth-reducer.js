@@ -78,7 +78,6 @@ export const login = (formData) => {
       updateAPIKey(apiKey)
       let userId = response.data.data.userId;
       let response2 = await profileAPI.getProfile(userId);
-      console.log(response2);
       let login = response2.data.fullName;
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
@@ -87,16 +86,13 @@ export const login = (formData) => {
     } else {
       if (response.data.resultCode === 10) {
         let response3 = await authAPI.captchaUrl();
-        console.log("Получили url капчи");
-        console.log(response);
-        console.log(response3);
         dispatch(setCaptchaUrl(response3.data.url));
         dispatch(
-          showSubmitErrors(response.data.messages, response.data.fieldsErrors)
+          showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
         );
       } else {
         dispatch(
-          showSubmitErrors(response.data.messages, response.data.fieldsErrors)
+          showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
         );
       }
     }
@@ -104,7 +100,7 @@ export const login = (formData) => {
   };
 };
 
-export const showSubmitErrors = (messages, fieldsErrors) => {
+export const showSubmitErrors = (formName, messages, fieldsErrors) => {
   return (dispatch) => {
     let formErrors = {};
     for (let i = 0; i < fieldsErrors.length; i++) {
@@ -126,7 +122,7 @@ export const showSubmitErrors = (messages, fieldsErrors) => {
       formErrors["_error"] = "Unknown error!";
     }
 
-    let action = stopSubmit("login", formErrors);
+    let action = stopSubmit(formName, formErrors);
     console.log("Вызываем ошибку");
     dispatch(action);
   };

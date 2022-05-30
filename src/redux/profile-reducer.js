@@ -1,5 +1,6 @@
 import { reset } from "redux-form";
 import { profileAPI } from "../api/api";
+import { showSubmitErrors } from "./auth-reducer";
 
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
@@ -81,6 +82,9 @@ export const savePhotoSuccess = (photos) => ({type: SAVE_PHOTO_SUCCESS, photos})
 export const deletePost = (postId) => ({type: DELETE_POST, postId});
 
 export const getUserProfile = (userId) => {
+    
+    console.log('Get user profile')
+    
     return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
         dispatch(setUserProfile(response.data));
@@ -107,8 +111,7 @@ export const updateStatus = (status) => {
 
 export const savePhoto = (file) => {
     return async (dispatch) => {
-        console.log(file)
-        
+
         let response = await profileAPI.savePhoto(file)
 
         console.log(response)
@@ -118,13 +121,28 @@ export const savePhoto = (file) => {
     }
 }
 
+export const saveProfile = (profile) => {
+    return async (dispatch, getState) => {
+        let userId = getState().auth.id     
+        let response = await profileAPI.saveProfile(profile)
+        if(response.data.resultCode === 0) {
+            dispatch(getUserProfile(userId));
+        }
+        else {
+            dispatch(
+              showSubmitErrors('edit-profile', response.data.messages, response.data.fieldsErrors)
+            );
+            return Promise.reject(response.data.messages)
+        }
+    }
+}
+
+
 export const sendPost = (newPostBody) => {
     return (dispatch) => {
         dispatch(addPost(newPostBody))
         dispatch(reset('ProfileAddPostForm'));
     }
 }
-
-
 
 export default profileReducer;

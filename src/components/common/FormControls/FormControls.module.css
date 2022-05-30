@@ -14,7 +14,11 @@
     margin-bottom: 10px;
 }
 
-.fieldWrap, .labelWrap {
+.fieldWrap, .labelCheckboxWrap {
     display: inline-block;
     vertical-align: middle;
+}
+
+.labelTextWrap {
+    font-weight: bold;
 }

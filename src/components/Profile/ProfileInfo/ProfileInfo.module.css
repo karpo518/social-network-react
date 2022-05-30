@@ -60,3 +60,27 @@ span.aboutTitle {
 .startChatWrap {
     margin: 10px 0px;
 }
+
+.profileDataForm {
+
+}
+.form {
+
+}
+
+.fieldItem {
+    margin: 10px 0px;
+}
+.editDataWrap, .saveDataWrap {
+    margin: 10px 0px;
+}
+
+.contactFieldWrap 
+{
+    margin: 10px 0px;
+}
+
+.errors
+{
+    color: red;
+}

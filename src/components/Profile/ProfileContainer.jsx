@@ -1,7 +1,7 @@
 import Profile from "./Profile";
 import React from "react";
 import { connect } from "react-redux";
-import { getUserProfile,getStatus,updateStatus,savePhoto } from "../../redux/profile-reducer";
+import { getUserProfile,getStatus,updateStatus,savePhoto,saveProfile } from "../../redux/profile-reducer";
 import { useParams,useLocation,useNavigate } from "react-router-dom";
 import { compose } from "redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
@@ -54,7 +54,8 @@ class ProfileContainer extends React.Component {
     
     if (prevProps.router.params.userId !== this.props.router.params.userId) {
         
-        this.getProfileData()
+      console.log([prevProps.router.params.userId, this.props.router.params.userId])  
+      this.getProfileData()
     }
   }
   
@@ -67,7 +68,9 @@ class ProfileContainer extends React.Component {
                      profile={this.props.profile} 
                      status={this.props.status} 
                      updateStatus={this.props.updateStatus} 
-                     savePhoto={this.props.savePhoto} />
+                     savePhoto={this.props.savePhoto} 
+                     saveProfile={this.props.saveProfile} 
+                     />
           : <div>Нет данных для отображения</div>
       }
       </>
@@ -82,7 +85,7 @@ let mapStateToProps = (state) => ({
 });
 
 export default compose(
-  connect(mapStateToProps, {getUserProfile, getStatus, updateStatus, savePhoto}),
+  connect(mapStateToProps, {getUserProfile, getStatus, updateStatus, savePhoto, saveProfile}),
   withRouter,
   withAuthRedirect,
 )(ProfileContainer)
