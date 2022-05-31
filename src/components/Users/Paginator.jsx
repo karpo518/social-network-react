@@ -33,7 +33,6 @@ const Paginator = ({totalItemsCount, pageSize, currentPage, onPageChanged, porti
     onPageChanged(pageNumber)
 
     let newPortionNumber = calcPortionNumber(pageNumber)
-    console.log(newPortionNumber, portionNumber)
     if(newPortionNumber !== portionNumber) {
       setPortionNumber(newPortionNumber)
     } 
