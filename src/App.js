@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 
 import HeaderContainer from "./components/Header/HeaderContainer";
@@ -38,6 +38,7 @@ const App = (props) => {
       <div className="app-wrapper-content">
         <Suspense fallback={<Preloader />}>
           <Routes>
+            <Route exact path="/" element={<Navigate to={'/profile'} /> } />
             <Route path="/dialogs/" element={<DialogsContainer />} />
             <Route path="/dialogs/:userId" element={<DialogsContainer />} />
             <Route path="/profile/" element={<ProfileContainer />} />
