@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import "./App.css";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -13,6 +13,7 @@ import Preloader from "./components/common/Preloader/Preloader";
 import { compose } from "redux";
 import store from "./redux/redux-store";
 import Page404 from "./components/common/Page404/Page404";
+import PopupMessage from "./components/common/PopupMessage/PopupMessage";
 
 // lazy components
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer') )
@@ -25,9 +26,31 @@ const LoginContainer = React.lazy(() => import('./components/Login/LoginContaine
 
 const App = (props) => {
 
+  let [textMessage,setTextMessage] = useState(null);
+
+  const openErrorMessage = (message) => {
+    setTextMessage({type: 'error', message: message})
+  }
+  
+  const closeErrorMessage = () => {
+    setTextMessage(null)
+  }
+
+  useEffect(() => {
+
+    const catchAllUnhandledErrors = ({reason, promise}) => {
+      console.log('Показать ошибку!')
+      openErrorMessage(reason.message);
+    }
+
+    window.addEventListener('unhandledrejection', catchAllUnhandledErrors)
+    return () => window.removeEventListener('unhandledrejection', catchAllUnhandledErrors)
+  }, []);
+
   useEffect(() => {
     props.initializeApp();
   });
+  
 
   return !props.initialized 
   ? <Preloader />
@@ -36,6 +59,7 @@ const App = (props) => {
       <HeaderContainer />
       <NavbarContainer  />
       <div className="app-wrapper-content">
+        {textMessage && <PopupMessage {...textMessage} onClose={closeErrorMessage} /> }
         <Suspense fallback={<Preloader />}>
           <Routes>
             <Route exact path="/" element={<Navigate to={'/profile'} /> } />

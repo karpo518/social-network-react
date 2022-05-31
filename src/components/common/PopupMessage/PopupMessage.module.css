@@ -1,0 +1,45 @@
+.wrap
+{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background-color: RGB(0,0,0,0.5);
+}
+
+.wrap .popup {
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.wrap .popup .row {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+
+.textTitle {
+    font-weight: bold;
+}
+
+.popup {
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+.error .popup button {
+    border: 2px solid red;
+    border-radius: 5px;
+    color: white;
+    background-color: red;
+}
