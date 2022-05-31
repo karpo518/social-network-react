@@ -2,7 +2,7 @@ import { stopSubmit } from "redux-form";
 import { profileAPI, authAPI, updateAPIKey } from "../api/api";
 
 const SET_USER_DATA = "SET-USER-DATA";
-const SET_CAPTHA_URL = "SET_CAPTHA_URL";
+const GET_CAPTCHA_URL_SUCCESS = "GET_CAPTCHA_URL_SUCCESS";
 const TOGGLE_IS_FETCHING = "TOGGLE_IS_FETCHING";
 
 let initialState = {
@@ -12,7 +12,7 @@ let initialState = {
   photoUrl: null,
   isAuth: false,
   isFetching: false,
-  captchaUrl: null,
+  captchaUrl: null, // if null, then captcha is not required
 };
 
 const authReducer = (state = initialState, action) => {
@@ -20,7 +20,7 @@ const authReducer = (state = initialState, action) => {
     case SET_USER_DATA: {
       return { ...state, ...action.payload };
     }
-    case SET_CAPTHA_URL: {
+    case GET_CAPTCHA_URL_SUCCESS: {
       return { ...state, captchaUrl: action.captchaUrl };
     }
     case TOGGLE_IS_FETCHING: {
@@ -36,8 +36,8 @@ export const setAuthUserData = (id, email, login, photoUrl, isAuth) => ({
   type: SET_USER_DATA,
   payload: { id, email, login, photoUrl, isAuth },
 });
-export const setCaptchaUrl = (captchaUrl) => ({
-  type: SET_CAPTHA_URL,
+export const getCaptchaUrlSuccess = (captchaUrl) => ({
+  type: GET_CAPTCHA_URL_SUCCESS,
   captchaUrl,
 });
 export const toggleIsFetching = (isFetching) => ({
@@ -64,11 +64,7 @@ export const getAuthUserData = () => {
 
 export const login = (formData) => {
   return async (dispatch) => {
-    let email = formData.email || "";
-    let password = formData.password || "";
-    let rememberMe = formData.rememberMe || false;
-    let captcha = formData.captcha || "";
-    let apiKey = formData.apiKey || "";
+    let {email, password, rememberMe, captcha, apiKey} = formData;
 
     dispatch(toggleIsFetching(true));
 
@@ -76,17 +72,16 @@ export const login = (formData) => {
     dispatch(toggleIsFetching(false));
     if (response.data.resultCode === 0) {
       updateAPIKey(apiKey)
-      let userId = response.data.data.userId;
+      let {userId, login} = response.data.data;
       let response2 = await profileAPI.getProfile(userId);
-      let login = response2.data.fullName;
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
-      dispatch(setCaptchaUrl(null));
+      dispatch(getCaptchaUrlSuccess(null));
       dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth));
     } else {
       if (response.data.resultCode === 10) {
         let response3 = await authAPI.captchaUrl();
-        dispatch(setCaptchaUrl(response3.data.url));
+        dispatch(getCaptchaUrlSuccess(response3.data.url));
         dispatch(
           showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
         );
@@ -131,9 +126,7 @@ export const showSubmitErrors = (formName, messages, fieldsErrors) => {
 export const updateCaptchaUrl = () => {
   return async (dispatch) => {
     let response = await authAPI.captchaUrl()
-    console.log("Получили url капчи");
-    console.log(response);
-    dispatch(setCaptchaUrl(response.data.url))
+    dispatch(getCaptchaUrlSuccess(response.data.url))
   }
 }
 

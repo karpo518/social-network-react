@@ -12,7 +12,7 @@ const LoginForm = (props) => {
       { createField('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
 
       { 
-        !props.captchaUrl || 
+        props.captchaUrl && 
         ( <div>
             <div className={s.fieldContent}>
                 <img onClick={props.updateCaptchaUrl} src={props.captchaUrl} alt={'captcha text'} />

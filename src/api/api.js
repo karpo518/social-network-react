@@ -16,7 +16,7 @@ let axiosConfig = {
 
 let instance = axios.create(axiosConfig);
 
-export const updateAPIKey = (apiKey) => {
+export const updateAPIKey = (apiKey = '') => {
     setAPIKey(apiKey)
     axiosConfig.headers['API-KEY'] = apiKey
     instance = axios.create(axiosConfig);
