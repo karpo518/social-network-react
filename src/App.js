@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import Preloader from "./components/common/Preloader/Preloader";
 import { compose } from "redux";
 import store from "./redux/redux-store";
+import Page404 from "./components/common/Page404/Page404";
 
 // lazy components
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer') )
@@ -46,6 +47,7 @@ const App = (props) => {
             <Route path="/music" element={<Music />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/login" element={<LoginContainer />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </Suspense>
       </div>
