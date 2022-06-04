@@ -6,16 +6,26 @@ const GET_CAPTCHA_URL_SUCCESS = "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS";
 const TOGGLE_IS_FETCHING = "MY-APP/AUTH/TOGGLE_IS_FETCHING";
 
 let initialState = {
-  id: null,
-  email: null,
-  login: null,
-  photoUrl: null,
-  isAuth: false,
-  isFetching: false,
-  captchaUrl: null, // if null, then captcha is not required
+  userId: null as number | null,
+  email: null as string | null,
+  login: null as string | null,
+  photoUrl: null as string | null,
+  isAuth: false as boolean,
+  isFetching: false as boolean,
+  captchaUrl: null as string | null, // if null, then captcha is not required
 };
 
-const authReducer = (state = initialState, action) => {
+type initialStateType = typeof initialState
+
+type authUserDataType = {
+  userId: number | null, 
+  email: string | null, 
+  login: string | null, 
+  photoUrl: string | null, 
+  isAuth: boolean
+}
+
+const authReducer = (state: initialStateType = initialState, action: any): initialStateType => {
   switch (action.type) {
     case SET_USER_DATA: {
       return { ...state, ...action.payload };
@@ -32,21 +42,38 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export const setAuthUserData = (id, email, login, photoUrl, isAuth) => ({
+type setAuthUserDataActionType = {
+  type: typeof SET_USER_DATA;
+  payload: authUserDataType;
+}
+
+type getCaptchaUrlSuccessActionType = {
+  type: typeof GET_CAPTCHA_URL_SUCCESS;
+  captchaUrl: string | null;
+}
+
+type toggleIsFetchingActionType = {
+  type: typeof TOGGLE_IS_FETCHING;
+  isFetching: boolean;
+}
+
+export const setAuthUserData = (authData: authUserDataType): setAuthUserDataActionType => ({
   type: SET_USER_DATA,
-  payload: { id, email, login, photoUrl, isAuth },
+  payload: { ...authData },
 });
-export const getCaptchaUrlSuccess = (captchaUrl) => ({
+
+export const getCaptchaUrlSuccess = (captchaUrl: string | null): getCaptchaUrlSuccessActionType => ({
   type: GET_CAPTCHA_URL_SUCCESS,
   captchaUrl,
 });
-export const toggleIsFetching = (isFetching) => ({
+
+export const toggleIsFetching = (isFetching: boolean): toggleIsFetchingActionType => ({
   type: TOGGLE_IS_FETCHING,
   isFetching: isFetching,
 });
 
 export const getAuthUserData = () => {
-  return async (dispatch) => {
+  return async (dispatch: any) => {
     dispatch(toggleIsFetching(true));
     let response = await authAPI.me();
     console.log("Авторизация получена!");
@@ -57,14 +84,18 @@ export const getAuthUserData = () => {
       dispatch(toggleIsFetching(false));
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
-      dispatch(setAuthUserData(id, email, login, photoUrl, isAuth));
+      dispatch(setAuthUserData({userId: id, email, login, photoUrl, isAuth}));
     }
   };
 };
 
-export const login = (formData) => {
-  return async (dispatch) => {
-    let {email, password, rememberMe, captcha, apiKey} = formData;
+export const login = (formData: any) => {
+  return async (dispatch: any) => {
+    let email: string = formData.email, 
+        password: string = formData.password, 
+        rememberMe: boolean = formData.rememberMe, 
+        captcha: string = formData.captcha, 
+        apiKey: string = formData.apiKey;
 
     dispatch(toggleIsFetching(true));
 
@@ -77,7 +108,7 @@ export const login = (formData) => {
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
       dispatch(getCaptchaUrlSuccess(null));
-      dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth));
+      dispatch(setAuthUserData({userId, email, login, photoUrl, isAuth }));
     } else {
       if (response.data.resultCode === 10) {
         let response3 = await authAPI.captchaUrl();
@@ -91,19 +122,18 @@ export const login = (formData) => {
         );
       }
     }
-    console.log(formData);
   };
 };
 
-export const showSubmitErrors = (formName, messages, fieldsErrors) => {
-  return (dispatch) => {
-    let formErrors = {};
+export const showSubmitErrors = (formName: string, messages: Array<string>, fieldsErrors: any) => {
+  return (dispatch: any) => {
+    let formErrors: any = {};
     for (let i = 0; i < fieldsErrors.length; i++) {
-      let fieldName = fieldsErrors[i]["field"];
-      let fieldError = fieldsErrors[i]["error"];
+      let fieldName: string = fieldsErrors[i]["field"];
+      let fieldError: string = fieldsErrors[i]["error"];
       formErrors[fieldName] = fieldError;
 
-      let messageKey = messages.indexOf(fieldError);
+      let messageKey: number  = messages.indexOf(fieldError);
       if (messageKey > -1) {
         messages.splice(messageKey, 1);
       }
@@ -124,27 +154,26 @@ export const showSubmitErrors = (formName, messages, fieldsErrors) => {
 };
 
 export const updateCaptchaUrl = () => {
-  return async (dispatch) => {
+  return async (dispatch: any) => {
     let response = await authAPI.captchaUrl()
     dispatch(getCaptchaUrlSuccess(response.data.url))
   }
 }
 
-export const logout = (formData) => {
-  return async (dispatch) => {
+export const logout = (formData: any) => {
+  return async (dispatch: any) => {
     dispatch(toggleIsFetching(true))
     let response = await authAPI.logout()
     dispatch(toggleIsFetching(false))
     if (response.data.resultCode === 0) {
-      let { userId, email, login, photoUrl, isAuth } = [
-        null,
-        null,
-        null,
-        null,
-        false,
-      ];
+      let userId = null,
+          email = null,
+          login = null,
+          photoUrl = null,
+          isAuth = false 
+
       updateAPIKey('')
-      dispatch(setAuthUserData(userId, email, login, photoUrl, isAuth))
+      dispatch(setAuthUserData({userId, email, login, photoUrl, isAuth}))
     }
     console.log(formData);
   }

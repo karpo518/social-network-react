@@ -78,7 +78,7 @@ export const authAPI = {
         console.log('GET: auth/me')
         return instance.get('auth/me')
     },
-    login(email, password, rememberMe = false, captcha = null) {
+    login(email, password, rememberMe = false, captcha = '') {
         console.log(`POST: auth/login`)
         return instance.post(`auth/login`,{email: email, password: password, rememberMe: rememberMe, captcha: captcha})
     },

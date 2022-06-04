@@ -33,8 +33,8 @@ class ProfileContainer extends React.Component {
       userId = this.props.router.params.userId
     }
 
-    else if(this.props.auth.id) {
-      userId = this.props.auth.id
+    else if(this.props.auth.userId) {
+      userId = this.props.auth.userId
     }
     else {
       this.props.router.navigate('/login')

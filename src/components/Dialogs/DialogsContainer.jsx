@@ -2,7 +2,6 @@ import Dialogs from "./Dialogs";
 import {
   getDialogs,
   getMessages,
-  selectDialog,
   sendMessage,
   createNewDialog,
   resetNewDialog,
@@ -23,23 +22,19 @@ export const DialogsContainer = (props) => {
   let [setSelectedDialog, getDialogs, getMessages] = [props.setSelectedDialog, props.getDialogs, props.getMessages]
 
   useEffect(() => {
-    console.log("Use effect: set selected id")
     setSelectedDialog(selectedId)
     getDialogs(selectedId)
     getMessages(selectedId)
   }, [selectedId, setSelectedDialog, getDialogs, getMessages])
 
   useEffect(() => {
-      console.log("Use effect: update dialogs and messages");
 
-        let timerId = setInterval(() => {
-          console.log(`Таймаут сработал! selectedId: ${selectedId}`)  
+        let timerId = setInterval(() => { 
           getDialogs(selectedId)
           getMessages(selectedId)
         }, 15000)
 
         return () => {
-          console.log('Демонтаж компонента!')
           clearTimeout(timerId);
         }
   }, [selectedId, setSelectedDialog, getDialogs, getMessages])      
@@ -71,7 +66,6 @@ export default compose(
     getDialogs,
     createNewDialog,
     resetNewDialog,
-    selectDialog,
     getMessages,
     sendMessage,
     setSelectedDialog
