@@ -1,13 +1,13 @@
 import { usersAPI } from "../api/api";
 import { updateObjectInArray } from "../utils/object-helpers";
 
-const FOLLOW = 'FOLLOW';
-const UNFOLLOW = 'UNFOLLOW';
-const SET_USERS = 'SET_USERS';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
-const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
-const TOGGLE_IS_FOLLOWING_IN_PROGRESS = 'TOGGLE_IS_FOLLOWING_IN_PROGRESS';
+const FOLLOW = 'MY-APP/USERS/FOLLOW';
+const UNFOLLOW = 'MY-APP/USERS/UNFOLLOW';
+const SET_USERS = 'MY-APP/USERS/SET_USERS';
+const SET_CURRENT_PAGE = 'MY-APP/USERS/SET_CURRENT_PAGE';
+const SET_TOTAL_USERS_COUNT = 'MY-APP/USERS/SET_TOTAL_USERS_COUNT';
+const TOGGLE_IS_FETCHING = 'MY-APP/USERS/TOGGLE_IS_FETCHING';
+const TOGGLE_IS_FOLLOWING_IN_PROGRESS = 'MY-APP/USERS/TOGGLE_IS_FOLLOWING_IN_PROGRESS';
 
 /*
         { id: 1, followed: false, fullName: 'Dmitry', status: 'I am boss', location: {city: 'Minsk', country: 'Belarus'},  photoUrl: 'https://i.pinimg.com/originals/63/97/51/639751f479935519929d41df4994e0d4.jpg' },

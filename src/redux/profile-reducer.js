@@ -2,12 +2,12 @@ import { reset } from "redux-form";
 import { profileAPI } from "../api/api";
 import { showSubmitErrors } from "./auth-reducer";
 
-const ADD_POST = 'ADD-POST';
-const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
-const SET_USER_PROFILE = 'SET_USER_PROFILE';
-const SET_STATUS = 'SET_STATUS';
-const SAVE_PHOTO_SUCCESS = 'SAVE_PHOTO_SUCCESS';
-const DELETE_POST = 'DELETE_POST';
+const ADD_POST = 'MY-APP/PROFILE/ADD-POST';
+const UPDATE_NEW_POST_TEXT = 'MY-APP/PROFILE/UPDATE-NEW-POST-TEXT';
+const SET_USER_PROFILE = 'MY-APP/PROFILE/SET_USER_PROFILE';
+const SET_STATUS = 'MY-APP/PROFILE/SET_STATUS';
+const SAVE_PHOTO_SUCCESS = 'MY-APP/PROFILE/SAVE_PHOTO_SUCCESS';
+const DELETE_POST = 'MY-APP/PROFILE/DELETE_POST';
 
 let initialState = {
     posts: [

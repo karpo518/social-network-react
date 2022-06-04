@@ -1,9 +1,9 @@
 import { stopSubmit } from "redux-form";
 import { profileAPI, authAPI, updateAPIKey } from "../api/api";
 
-const SET_USER_DATA = "SET-USER-DATA";
-const GET_CAPTCHA_URL_SUCCESS = "GET_CAPTCHA_URL_SUCCESS";
-const TOGGLE_IS_FETCHING = "TOGGLE_IS_FETCHING";
+const SET_USER_DATA = "MY-APP/AUTH/SET-USER-DATA";
+const GET_CAPTCHA_URL_SUCCESS = "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS";
+const TOGGLE_IS_FETCHING = "MY-APP/AUTH/TOGGLE_IS_FETCHING";
 
 let initialState = {
   id: null,

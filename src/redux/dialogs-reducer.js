@@ -1,12 +1,12 @@
 import { reset } from "redux-form";
 import { dialogsAPI, profileAPI } from "../api/api";
 
-const SET_NEW_DIALOG = "SET_NEW_DIALOG";
-const RESET_NEW_DIALOG = "RESET_NEW_DIALOG";
-const SET_SELECTED_DIALOG = "SET_SELECTED_DIALOG";
-const ADD_MESSAGE = "ADD_MESSAGE";
-const SET_MESSAGES = "SET_MESSAGES";
-const SET_DIALOGS = "SET_DIALOGS";
+const SET_NEW_DIALOG = "MY-APP/DIALOGS/SET_NEW_DIALOG";
+const RESET_NEW_DIALOG = "MY-APP/DIALOGS/RESET_NEW_DIALOG";
+const SET_SELECTED_DIALOG = "MY-APP/DIALOGS/SET_SELECTED_DIALOG";
+const ADD_MESSAGE = "MY-APP/DIALOGS/ADD_MESSAGE";
+const SET_MESSAGES = "MY-APP/DIALOGS/SET_MESSAGES";
+const SET_DIALOGS = "MY-APP/DIALOGS/SET_DIALOGS";
 // const UPDATE_NEW_MESSAGE_BODY = "UPDATE-NEW-MESSAGE-BODY";
 
 let initialState = {
@@ -76,6 +76,7 @@ export const setSelectedDialog = (selectedId) => ({ type: SET_SELECTED_DIALOG, s
 export const addMessage = (message) => ({ type: ADD_MESSAGE, message });
 
 export const getDialogs = (selectedId) => {
+    
     return async (dispatch) => {
 
         console.log('getDialogs')
