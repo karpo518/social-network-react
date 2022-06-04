@@ -2,9 +2,9 @@ import { NavLink } from "react-router-dom";
 import s from "./Header.module.css";
 import userPhoto from "../../assets/images/user.jpg";
 import logo from "../../assets/images/logo.png";
+import { propsType } from "./HeaderContainer";
 
-
-const Header = (props) => {
+const Header = (props: propsType) => {
   return (
     <header className={s.header}>
       <div className={s.logo}>

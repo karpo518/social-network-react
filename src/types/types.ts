@@ -1,3 +1,5 @@
+export type storeType = any
+
 export type postType = {
     id: number;
     message: string;
