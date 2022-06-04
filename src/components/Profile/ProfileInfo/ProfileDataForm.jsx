@@ -40,7 +40,7 @@ export const ProfileDataForm = (props) => {
         <div className={s.contactList}>
           {contacts.map(function (title) {
               return (
-                <div className={s.contactFieldWrap} >
+                <div key={title} className={s.contactFieldWrap} >
                   {createField(title, 
                                  `contacts.${title}`, 
                                  [], 
