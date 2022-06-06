@@ -1,9 +1,8 @@
 import {logout} from '../../redux/auth-reducer';
 import Header from './Header';
 import React from "react";
-import Preloader from "../common/Preloader/Preloader";
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { storeType } from '../../types/types';
+import { AppStateType } from '../../redux/redux-store';
 
 type statePropsType = {
   isAuth: boolean
@@ -38,7 +37,7 @@ class HeaderContainer extends React.Component {
   }
 }
 
-let mapStateToProps: MapStateToProps<statePropsType, ownPropsType, storeType> = (state: storeType, props: ownPropsType)=> {
+let mapStateToProps: MapStateToProps<statePropsType, ownPropsType, AppStateType> = (state, props)=> {
   return {
     isAuth: state.auth.isAuth, 
     login: state.auth.login, 

@@ -15,7 +15,7 @@ let initialState = {
   captchaUrl: null as string | null, // if null, then captcha is not required
 };
 
-type initialStateType = typeof initialState
+export type authType = typeof initialState
 
 type authUserDataType = {
   userId: number | null, 
@@ -25,7 +25,7 @@ type authUserDataType = {
   isAuth: boolean
 }
 
-const authReducer = (state: initialStateType = initialState, action: any): initialStateType => {
+const authReducer = (state: authType = initialState, action: any): authType => {
   switch (action.type) {
     case SET_USER_DATA: {
       return { ...state, ...action.payload };

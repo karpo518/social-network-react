@@ -1,10 +1,15 @@
 import s from "./../Dialogs.module.css";
 import defaultPhoto from "../../../assets/images/user.jpg";
+import { FC } from "react";
+import { MessageType } from "../../../types/types";
 
-const Message = (props) => {
-  
-  // console.log('Сообщение!')
-  // console.log([props.senderId, props.selectedId ])
+type OtherPropsType = {
+  selectedId: number | null
+}
+
+type PropsType = MessageType & OtherPropsType
+
+const Message: FC<PropsType> = (props) => {
   
   let ownershipClass = props.senderId === props.selectedId ? "incoming" : "outgoing";
   return (

@@ -1,31 +1,35 @@
 import Profile from "./Profile";
-import React from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { getUserProfile,getStatus,updateStatus,savePhoto,saveProfile } from "../../redux/profile-reducer";
 import { useParams,useLocation,useNavigate } from "react-router-dom";
 import { compose } from "redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import { ProfileType } from "../../types/types";
+import { authType } from "../../redux/auth-reducer";
+import { AppStateType } from "../../redux/redux-store";
 
-
-
-// wrapper to use react router's v6 hooks in class component(to use HOC pattern, like in router v5)
-function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-      let location = useLocation();
-      let navigate = useNavigate();
-      let params = useParams();
-      return (
-          <Component
-              {...props}
-              router={{ location, navigate, params }}
-          />
-      );
-  }
-
-  return ComponentWithRouterProp;
+type MapStatePropsType = {
+  profile: ProfileType | null
+  status: string
+  auth: authType
 }
 
-class ProfileContainer extends React.Component {
+type MapDispatchPropsType = {
+  getUserProfile: (userId: number) => any
+  getStatus: (userId: number) => any
+  updateStatus: (newStatus: string) => void
+  savePhoto: (file: any) => void
+  saveProfile: (newProfile: ProfileType) => any 
+}
+
+type HOCPropsType = {
+  router: any
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType & HOCPropsType
+
+class ProfileContainer extends Component<PropsType> {
 
   getProfileData = () => {
     let userId = null 
@@ -50,7 +54,7 @@ class ProfileContainer extends React.Component {
     
     this.getProfileData()
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: PropsType) {
     
     if (prevProps.router.params.userId !== this.props.router.params.userId) {
         
@@ -78,14 +82,39 @@ class ProfileContainer extends React.Component {
   };
 }
 
-let mapStateToProps = (state) => ({
+// wrapper to use react router's v6 hooks in class component(to use HOC pattern, like in router v5)
+function withRouter(Comp: typeof Component) {
+  function ComponentWithRouterProp(props: any) {
+      let location = useLocation();
+      let navigate = useNavigate();
+      let params = useParams();
+      return (
+          <Comp
+              {...props}
+              router={{ location, navigate, params }}
+          />
+      );
+  }
+
+  return ComponentWithRouterProp;
+}
+
+let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
   profile: state.profilePage.profile,
   status: state.profilePage.status,
   auth: state.auth,
 });
 
+const MapDispatchToProps = {
+  getUserProfile,
+  getStatus, 
+  updateStatus, 
+  savePhoto, 
+  saveProfile
+}
+
 export default compose(
-  connect(mapStateToProps, {getUserProfile, getStatus, updateStatus, savePhoto, saveProfile}),
+  connect<MapStatePropsType,MapDispatchPropsType, HOCPropsType, AppStateType>(mapStateToProps, MapDispatchToProps),
   withRouter,
   withAuthRedirect,
 )(ProfileContainer)

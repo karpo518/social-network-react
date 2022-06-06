@@ -1,9 +1,49 @@
-import { reduxForm } from "redux-form";
+import { FC } from "react";
+import { InjectedFormProps, reduxForm } from "redux-form";
 import { required } from "../../utils/validators/validators";
 import { createField, InputArea } from "../common/FormControls/FormControls";
 import s from "./Login.module.css";
 
-const LoginForm = (props) => {
+type PropsType = {
+  isAuth: boolean
+  captchaUrl: string | null
+  login: (formData: any) => void
+  updateCaptchaUrl: () => void
+}
+
+const Login: FC<PropsType> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
+  const onSubmit = (formData: any) => {
+    login(formData);
+  };
+
+  return (
+    <div>
+      <h1>Login</h1>
+      {isAuth ? (
+        <div>You are logged in already!</div>
+      ) : (
+        <LoginReduxForm captchaUrl={captchaUrl} updateCaptchaUrl={updateCaptchaUrl} onSubmit={onSubmit} />
+      )}
+    </div>
+  );
+};
+
+type FormDataType = {
+  email: string
+  password: string
+  apiKey: string
+  captcha?: string
+}
+
+type OwnPropsType = {
+  captchaUrl: string | null
+  updateCaptchaUrl: () => void
+  onSubmit: (formData: any) => void
+}
+
+type FormPropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+
+const LoginForm: FC<FormPropsType> = (props) => {
     return (
     <form onSubmit={props.handleSubmit} className={s.form}>
 
@@ -35,23 +75,6 @@ const LoginForm = (props) => {
   );
 };
 
-const LoginReduxForm = reduxForm({ form: "login" })(LoginForm);
-
-const Login = ({isAuth,captchaUrl, login, updateCaptchaUrl}) => {
-  const onSubmit = (formData) => {
-    login(formData);
-  };
-
-  return (
-    <div>
-      <h1>Login</h1>
-      {isAuth ? (
-        <div>You are logged in already!</div>
-      ) : (
-        <LoginReduxForm captchaUrl={captchaUrl} updateCaptchaUrl={updateCaptchaUrl} onSubmit={onSubmit} />
-      )}
-    </div>
-  );
-};
+const LoginReduxForm = reduxForm<FormDataType,OwnPropsType>({ form: "login" })(LoginForm);
 
 export default Login;

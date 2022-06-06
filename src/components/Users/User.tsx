@@ -1,8 +1,17 @@
 import s from "./User.module.css";
 import defaultPhoto from "../../assets/images/user.jpg";
 import { NavLink } from "react-router-dom";
+import { UserType } from "../../types/types";
+import { FC } from "react";
 
-const User = ({user, follow, unfollow, followingInProgress}) => {
+type PropsType = {
+  user: UserType
+  follow: (userId: number) => void
+  unfollow: (userId: number) => void
+  followingInProgress: Array<number>
+}
+
+const User: FC<PropsType> = ({user, follow, unfollow, followingInProgress}) => {
 
   return (
     <div className={s.user} key={user.id}>
@@ -21,7 +30,7 @@ const User = ({user, follow, unfollow, followingInProgress}) => {
                 unfollow(user.id);
               }}
               className={`${s.btn} ${s.btnFollow}`}
-              disabled={followingInProgress.some((id) => id === user.id)}
+              disabled={followingInProgress.some((id: number) => id === user.id)}
             >
               Unfollow
             </button>

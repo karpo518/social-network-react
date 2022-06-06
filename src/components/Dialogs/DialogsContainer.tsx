@@ -11,9 +11,31 @@ import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
+import { DialogType, MessageType } from "../../types/types";
+import { authType } from "../../redux/auth-reducer";
+import { AppStateType } from "../../redux/redux-store";
 
-export const DialogsContainer = (props) => {
+type MapStatePropsType = {
+  dialogs: Array<DialogType>
+  messages: Array<MessageType>
+  selectedId: number | null,
+  newDialog: DialogType | null,
+  auth: authType,
+}
+
+type MapDispatchPropsType = {
+  getDialogs: (selectedUserId: number) => void
+  createNewDialog: (userId: number) => void
+  resetNewDialog: () => void
+  getMessages: (userId: number) => void
+  sendMessage: (userId: number, formData: any) => void
+  setSelectedDialog: (userId: number) => void
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType
+
+export const DialogsContainer: FC<PropsType> = (props) => {
   
   const params = useParams();
 
@@ -50,7 +72,7 @@ export const DialogsContainer = (props) => {
   );
 };
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType): MapStatePropsType => {
   return {
     dialogs: state.dialogsPage.dialogs,
     messages: state.dialogsPage.messages,
@@ -60,15 +82,16 @@ let mapStateToProps = (state) => {
   };
 };
 
+let mapDispatchToProps = {
+  getDialogs,
+  createNewDialog,
+  resetNewDialog,
+  getMessages,
+  sendMessage,
+  setSelectedDialog
+}
 
 export default compose(
-  connect(mapStateToProps, {
-    getDialogs,
-    createNewDialog,
-    resetNewDialog,
-    getMessages,
-    sendMessage,
-    setSelectedDialog
-  }),
-  withAuthRedirect
+  withAuthRedirect,
+  connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, mapDispatchToProps),
 )(DialogsContainer);

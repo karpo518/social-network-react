@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import cn from 'classnames'
 import s from "./Paginator.module.css";
 
+type Props = {
+  totalItemsCount: number
+  pageSize: number
+  currentPage: number
+  onPageChanged: (pageNumber: number) => void
+  portionSize?: number
+}
 
-const Paginator = ({totalItemsCount, pageSize, currentPage, onPageChanged, portionSize = 10}) => {
+const Paginator: FC<Props> = ({totalItemsCount, pageSize, currentPage, onPageChanged, portionSize = 10}) => {
   
-  const calcPortionNumber = (pageNumber) => {    
+  const calcPortionNumber = (pageNumber: number) => {    
     return  Math.floor(pageNumber/portionSize) + 1
   }
 
   let pagesCount = Math.ceil(totalItemsCount / pageSize);
 
-  let pages = [];
+  let pages: Array<number> = [];
   for (let i = 1; i <= pagesCount; i++) {
     pages.push(i);
   }
@@ -23,12 +30,12 @@ const Paginator = ({totalItemsCount, pageSize, currentPage, onPageChanged, porti
   let startPortion = (portionNumber - 1) * portionSize + 1
   let endPortion = (portionNumber - 1) * portionSize + portionSize
 
-  const onPortionClick = (portionNumber) => {
+  const onPortionClick = (portionNumber: number) => {
 
     setPortionNumber(portionNumber)
   }
 
-  const onPageClick = (pageNumber) => {
+  const onPageClick = (pageNumber: number) => {
 
     onPageChanged(pageNumber)
 

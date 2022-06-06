@@ -1,9 +1,23 @@
-import { Field } from "redux-form";
+import { FC, FunctionComponent } from "react";
+import { Field, InjectedFormProps } from "redux-form";
 import { reduxForm } from "redux-form";
+import { ProfileType } from "../../../types/types";
 import { createField, InputArea } from "../../common/FormControls/FormControls";
 import s from "./ProfileInfo.module.css";
 
-export const ProfileDataForm = (props) => {
+type FormDataType = {
+  profile: ProfileType
+} 
+
+type OwnPropsType = {
+  profile: ProfileType
+  initialValues: ProfileType
+  onSubmit: (formData: any) => void
+}
+
+type PropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+
+export const ProfileDataForm: FC<PropsType> = (props) => {
 
   let contacts = Object.keys(props.profile.contacts)
   
@@ -59,6 +73,6 @@ export const ProfileDataForm = (props) => {
   );
 };
 
-const ProfileDataReduxForm = reduxForm({ form: "edit-profile", enableReinitialize: true, destroyOnUnmount: false })(ProfileDataForm);
+const ProfileDataReduxForm = reduxForm<FormDataType,OwnPropsType>({ form: "edit-profile", enableReinitialize: true, destroyOnUnmount: false })(ProfileDataForm);
 
 export default ProfileDataReduxForm;

@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { FriendType } from "../../../types/types";
 import s from "./../Navbar.module.css";
 
-const Friend = (props) => {
+type PropsType = FriendType
+
+const Friend = (props: PropsType) => {
 
   return (
       <li className={s.item}>

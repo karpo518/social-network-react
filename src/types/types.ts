@@ -1,17 +1,15 @@
-export type storeType = any
-
-export type postType = {
-    id: number;
-    message: string;
-    likesCount: number;
+export type PostType = {
+    id: number
+    message: string
+    likesCount: number
 }
 
-export type photosType = {
+export type PhotosType = {
     small: string | null 
     large: string | null
 }
 
-export type contactsType = {
+export type ContactsType = {
     github: string
     vk: string
     facebook: string
@@ -22,18 +20,44 @@ export type contactsType = {
     mainLink: string
 }
 
-export type profileType = {
+export type ProfileType = {
     userId: number | null
     lookingForAJob: boolean
     lookingForAJobDescription: string
     fullName: string
-    contacts: contactsType
-    photos: photosType
+    contacts: ContactsType
+    photos: PhotosType
+    aboutMe?: string
 }
-export type userType = {
-    name: string
+export type UserType = {
     id: number
-    photos: photosType
+    name: string
+    photos: PhotosType
     status: string | null
     followed: boolean
+}
+
+export type FriendType =
+{
+    id: number
+    name: string
+    image: string
+}
+
+export type MessageType = {
+    id: string
+    senderId: number
+    senderName: string,
+    recipientId:number
+    body: string
+    translatedBody: string | null
+    addedAt: string
+    viewed: boolean
+}
+
+export type DialogType = {
+    id: number
+    userName: string
+    newMessagesCount: number
+    photos: {small: string | null, large: string | null}
 }

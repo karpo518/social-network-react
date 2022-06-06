@@ -1,5 +1,6 @@
 import { reset } from "redux-form";
 import { dialogsAPI, profileAPI } from "../api/api";
+import { DialogType } from "../types/types";
 
 const SET_NEW_DIALOG = "MY-APP/DIALOGS/SET_NEW_DIALOG";
 const RESET_NEW_DIALOG = "MY-APP/DIALOGS/RESET_NEW_DIALOG";
@@ -12,7 +13,7 @@ let initialState = {
     dialogs: [] as Array<dialogType>,
     messages: [] as Array<messageType>,
     selectedId: null as number | null,
-    newDialog: null as boolean | null,
+    newDialog: null as DialogType | null,
 }
 
 type InitialStateType = typeof initialState

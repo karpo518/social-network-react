@@ -1,8 +1,22 @@
+import { FC } from "react";
+import { UserType } from "../../types/types";
 import Preloader from "../common/Preloader/Preloader";
 import Paginator from "./Paginator";
 import User from "./User";
 
-const Users = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props} ) => {
+type PropsType = {
+  currentPage: number
+  totalUsersCount: number
+  pageSize: number
+  users: Array<UserType>
+  isFetching: boolean
+  followingInProgress: Array<number>
+  onPageChanged: (pageNumber: number) => void
+  follow: (userId: number) => void
+  unfollow: (userId: number) => void
+}
+
+const Users: FC<PropsType> = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props} ) => {
 
   return (
     <div>
@@ -11,7 +25,7 @@ const Users = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props}
         { 
           props.isFetching 
             ? <Preloader />
-            : props.users.map((u) => {
+            : props.users.map((u: UserType) => {
                 return (
                   <User
                     key={u.id}

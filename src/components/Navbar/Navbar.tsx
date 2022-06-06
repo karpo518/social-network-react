@@ -1,8 +1,14 @@
+import { FC } from "react";
 import { NavLink } from "react-router-dom";
+import { FriendType } from "../../types/types";
 import Friend from "./Friend/Friend";
 import s from "./Navbar.module.css";
 
-const Navbar = (props) => {
+type PropsType = {
+  friends: Array<FriendType>
+}
+
+const Navbar: FC<PropsType> = (props) => {
   let friendsData = props.friends.map((f) => (
     <Friend id={f.id} image={f.image} name={f.name} key={f.id} />
   ));
