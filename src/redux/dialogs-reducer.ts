@@ -1,6 +1,8 @@
 import { reset } from "redux-form";
+import { ThunkAction } from "redux-thunk";
 import { dialogsAPI, profileAPI } from "../api/api";
 import { DialogType } from "../types/types";
+import { AppStateType } from "./redux-store";
 
 const SET_NEW_DIALOG = "MY-APP/DIALOGS/SET_NEW_DIALOG";
 const RESET_NEW_DIALOG = "MY-APP/DIALOGS/RESET_NEW_DIALOG";
@@ -38,7 +40,7 @@ type messageType = {
     viewed: boolean;
 }
 
-const dialogsReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
+const dialogsReducer = (state: InitialStateType = initialState, action: ActionsTypes): InitialStateType => {
 
   switch (action.type) {
     case SET_DIALOGS:
@@ -107,6 +109,9 @@ type addMessageActionType = {
     message: messageType;
 }
 
+type ActionsTypes = setMessagesActionType | setDialogsActionType | setNewDialogActionType |
+    resetNewDialogActionType | setSelectedDialogActionType | addMessageActionType
+
 export const setMessages = (messages: Array<messageType>): setMessagesActionType => ({ type: SET_MESSAGES, messages: messages});
 
 export const setDialogs = (dialogs: Array<dialogType>): setDialogsActionType => ({ type: SET_DIALOGS, dialogs });
@@ -119,9 +124,11 @@ export const setSelectedDialog = (selectedId: number): setSelectedDialogActionTy
 
 export const addMessage = (message: messageType): addMessageActionType => ({ type: ADD_MESSAGE, message });
 
-export const getDialogs = (selectedId: number) => {
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+
+export const getDialogs = (selectedId: number): ThunkType => {
     
-    return async (dispatch: any) => {
+    return async (dispatch) => {
 
         let response = await dialogsAPI.get()
         let dialogs: Array<dialogType> = response.data;
@@ -136,8 +143,8 @@ export const getDialogs = (selectedId: number) => {
     };
 };
 
-export const getMessages = (selectedId: number) => {
-    return async (dispatch: any) => {
+export const getMessages = (selectedId: number): ThunkType => {
+    return async (dispatch) => {
         if(!selectedId) {
             dispatch( setMessages([]) );
         }
@@ -148,9 +155,9 @@ export const getMessages = (selectedId: number) => {
     }
 }
 
-export const createNewDialog = (userId: number) => {
+export const createNewDialog = (userId: number): ThunkType => {
     
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
         let p = response.data
         let newDialog: dialogType = { id: userId, 
@@ -163,13 +170,13 @@ export const createNewDialog = (userId: number) => {
     };
 }
 
-export const sendMessage = (userId: number, formData: any) => {
+export const sendMessage = (userId: number, formData: any): ThunkType => {
   
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         let body = formData.body;
         let response = await dialogsAPI.sendMessage(userId, body)
         if (response.data.resultCode === 0) {
-            await dispatch(addMessage(response.data.data.message));
+            dispatch(addMessage(response.data.data.message));
             dispatch(reset('DialogsAddMessageForm'));
         }
     };

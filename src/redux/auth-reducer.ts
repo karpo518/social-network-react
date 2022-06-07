@@ -1,5 +1,8 @@
+import { Action } from "redux";
 import { stopSubmit } from "redux-form";
+import { ThunkAction } from "redux-thunk";
 import { profileAPI, authAPI, updateAPIKey } from "../api/api";
+import { AppStateType } from "./redux-store";
 
 const SET_USER_DATA = "MY-APP/AUTH/SET-USER-DATA";
 const GET_CAPTCHA_URL_SUCCESS = "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS";
@@ -25,7 +28,7 @@ type authUserDataType = {
   isAuth: boolean
 }
 
-const authReducer = (state: authType = initialState, action: any): authType => {
+const authReducer = (state: authType = initialState, action: ActionsTypes): authType => {
   switch (action.type) {
     case SET_USER_DATA: {
       return { ...state, ...action.payload };
@@ -57,6 +60,10 @@ type toggleIsFetchingActionType = {
   isFetching: boolean;
 }
 
+export type showSubmitErrorsType = Action<typeof stopSubmit>
+
+type ActionsTypes = setAuthUserDataActionType | getCaptchaUrlSuccessActionType | toggleIsFetchingActionType | showSubmitErrorsType
+
 export const setAuthUserData = (authData: authUserDataType): setAuthUserDataActionType => ({
   type: SET_USER_DATA,
   payload: { ...authData },
@@ -72,8 +79,35 @@ export const toggleIsFetching = (isFetching: boolean): toggleIsFetchingActionTyp
   isFetching: isFetching,
 });
 
-export const getAuthUserData = () => {
-  return async (dispatch: any) => {
+export const showSubmitErrors = (formName: string, messages: Array<string>, fieldsErrors: any): showSubmitErrorsType => {
+    let formErrors: any = {};
+    for (let i = 0; i < fieldsErrors.length; i++) {
+      let fieldName: string = fieldsErrors[i]["field"];
+      let fieldError: string = fieldsErrors[i]["error"];
+      formErrors[fieldName] = fieldError;
+
+      let messageKey: number  = messages.indexOf(fieldError);
+      if (messageKey > -1) {
+        messages.splice(messageKey, 1);
+      }
+    }
+
+    if (messages) {
+      formErrors["_error"] = messages.join(", ");
+    }
+
+    if (Object.entries(formErrors).length === 0) {
+      formErrors["_error"] = "Unknown error!";
+    }
+
+    return stopSubmit(formName, formErrors);
+};
+
+
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+
+export const getAuthUserData = (): ThunkType => {
+  return async (dispatch) => {
     dispatch(toggleIsFetching(true));
     let response = await authAPI.me();
     console.log("Авторизация получена!");
@@ -89,8 +123,8 @@ export const getAuthUserData = () => {
   };
 };
 
-export const login = (formData: any) => {
-  return async (dispatch: any) => {
+export const login = (formData: any): ThunkType => {
+  return async (dispatch) => {
     let email: string = formData.email, 
         password: string = formData.password, 
         rememberMe: boolean = formData.rememberMe, 
@@ -125,42 +159,14 @@ export const login = (formData: any) => {
   };
 };
 
-export const showSubmitErrors = (formName: string, messages: Array<string>, fieldsErrors: any) => {
-  return (dispatch: any) => {
-    let formErrors: any = {};
-    for (let i = 0; i < fieldsErrors.length; i++) {
-      let fieldName: string = fieldsErrors[i]["field"];
-      let fieldError: string = fieldsErrors[i]["error"];
-      formErrors[fieldName] = fieldError;
-
-      let messageKey: number  = messages.indexOf(fieldError);
-      if (messageKey > -1) {
-        messages.splice(messageKey, 1);
-      }
-    }
-
-    if (messages) {
-      formErrors["_error"] = messages.join(", ");
-    }
-
-    if (Object.entries(formErrors).length === 0) {
-      formErrors["_error"] = "Unknown error!";
-    }
-
-    let action = stopSubmit(formName, formErrors);
-    console.log("Вызываем ошибку");
-    dispatch(action);
-  };
-};
-
-export const updateCaptchaUrl = () => {
+export const updateCaptchaUrl = (): ThunkType => {
   return async (dispatch: any) => {
     let response = await authAPI.captchaUrl()
     dispatch(getCaptchaUrlSuccess(response.data.url))
   }
 }
 
-export const logout = (formData: any) => {
+export const logout = (formData: any): ThunkType => {
   return async (dispatch: any) => {
     dispatch(toggleIsFetching(true))
     let response = await authAPI.logout()
