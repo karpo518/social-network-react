@@ -39,8 +39,10 @@ const App = (props) => {
   useEffect(() => {
 
     const catchAllUnhandledErrors = ({reason, promise}) => {
-      console.log('Показать ошибку!')
-      openErrorMessage(reason.message);
+      if(reason.message) {
+        console.log('Показать ошибку!')
+        openErrorMessage(reason.message);
+      }
     }
 
     window.addEventListener('unhandledrejection', catchAllUnhandledErrors)

@@ -12,22 +12,13 @@ const SET_MESSAGES = "MY-APP/DIALOGS/SET_MESSAGES";
 const SET_DIALOGS = "MY-APP/DIALOGS/SET_DIALOGS";
 
 let initialState = {
-    dialogs: [] as Array<dialogType>,
+    dialogs: [] as Array<DialogType>,
     messages: [] as Array<messageType>,
     selectedId: null as number | null,
     newDialog: null as DialogType | null,
 }
 
 type InitialStateType = typeof initialState
-
-type dialogType = {
-    id: number;
-    userName: string;
-    hasNewMessages: boolean;
-    lastUserActivityDate: string;
-    newMessagesCount: number;
-    photos: { small: string | null, large: string | null }
-};
 
 type messageType = {
     id: string;
@@ -87,12 +78,12 @@ type setMessagesActionType = {
 
 type setDialogsActionType = {
     type: typeof SET_DIALOGS;
-    dialogs: Array<dialogType>;
+    dialogs: Array<DialogType>;
 }
 
 type setNewDialogActionType = {
     type: typeof SET_NEW_DIALOG;
-    newDialog: dialogType;
+    newDialog: DialogType;
 }
 
 type resetNewDialogActionType = {
@@ -114,9 +105,9 @@ type ActionsTypes = setMessagesActionType | setDialogsActionType | setNewDialogA
 
 export const setMessages = (messages: Array<messageType>): setMessagesActionType => ({ type: SET_MESSAGES, messages: messages});
 
-export const setDialogs = (dialogs: Array<dialogType>): setDialogsActionType => ({ type: SET_DIALOGS, dialogs });
+export const setDialogs = (dialogs: Array<DialogType>): setDialogsActionType => ({ type: SET_DIALOGS, dialogs });
 
-export const setNewDialog = (newDialog: dialogType): setNewDialogActionType => ({ type: SET_NEW_DIALOG, newDialog});
+export const setNewDialog = (newDialog: DialogType): setNewDialogActionType => ({ type: SET_NEW_DIALOG, newDialog});
 
 export const resetNewDialog = (): resetNewDialogActionType => ({ type: RESET_NEW_DIALOG });
 
@@ -131,7 +122,7 @@ export const getDialogs = (selectedId: number): ThunkType => {
     return async (dispatch) => {
 
         let response = await dialogsAPI.get()
-        let dialogs: Array<dialogType> = response.data;
+        let dialogs: Array<DialogType> = response.data;
         dispatch(setDialogs(dialogs));
         let dialogExists = dialogs.some((d) => d.id === selectedId);
         if(selectedId && !dialogExists) {
@@ -160,10 +151,11 @@ export const createNewDialog = (userId: number): ThunkType => {
     return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
         let p = response.data
-        let newDialog: dialogType = { id: userId, 
+        let newDialog: DialogType = { id: userId, 
                                       userName: p.fullName, 
                                       hasNewMessages: false, 
                                       lastUserActivityDate: '',
+                                      lastDialogActivityDate: '',
                                       newMessagesCount: 0, 
                                       photos: { small: p.photos.small, large: null } }
         dispatch(setNewDialog(newDialog));

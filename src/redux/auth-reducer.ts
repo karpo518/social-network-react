@@ -1,3 +1,4 @@
+import { EResultCodes, EResultCodeCaptcha } from './../api/api';
 import { Action } from "redux";
 import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
@@ -111,7 +112,7 @@ export const getAuthUserData = (): ThunkType => {
     dispatch(toggleIsFetching(true));
     let response = await authAPI.me();
     console.log("Авторизация получена!");
-    if (response.data.resultCode === 0) {
+    if (response.data.resultCode === EResultCodes.Success) {
       let { id, email, login } = response.data.data;
       let response2 = await profileAPI.getProfile(id);
       console.log("Профиль получен!");
@@ -135,7 +136,7 @@ export const login = (formData: any): ThunkType => {
 
     let response = await authAPI.login(email, password, rememberMe, captcha);
     dispatch(toggleIsFetching(false));
-    if (response.data.resultCode === 0) {
+    if (response.data.resultCode === EResultCodes.Success) {
       updateAPIKey(apiKey)
       let {userId, login} = response.data.data;
       let response2 = await profileAPI.getProfile(userId);
@@ -144,7 +145,7 @@ export const login = (formData: any): ThunkType => {
       dispatch(getCaptchaUrlSuccess(null));
       dispatch(setAuthUserData({userId, email, login, photoUrl, isAuth }));
     } else {
-      if (response.data.resultCode === 10) {
+      if (response.data.resultCode === EResultCodeCaptcha.CaptchaIsRequired) {
         let response3 = await authAPI.captchaUrl();
         dispatch(getCaptchaUrlSuccess(response3.data.url));
         dispatch(
@@ -171,7 +172,7 @@ export const logout = (formData: any): ThunkType => {
     dispatch(toggleIsFetching(true))
     let response = await authAPI.logout()
     dispatch(toggleIsFetching(false))
-    if (response.data.resultCode === 0) {
+    if (response.data.resultCode === EResultCodes.Success) {
       let userId = null,
           email = null,
           login = null,

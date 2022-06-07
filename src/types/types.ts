@@ -35,6 +35,7 @@ export type UserType = {
     photos: PhotosType
     status: string | null
     followed: boolean
+    uniqueUrlName: string | null
 }
 
 export type FriendType =
@@ -55,9 +56,19 @@ export type MessageType = {
     viewed: boolean
 }
 
+export type NewMessageType = {
+    deletedBySender: boolean
+    deletedByRecipient: boolean
+    isSpam: boolean
+    distributionId: any
+}
+
 export type DialogType = {
     id: number
     userName: string
+    hasNewMessages: boolean,
+    lastDialogActivityDate: string,
+    lastUserActivityDate: string,
     newMessagesCount: number
     photos: {small: string | null, large: string | null}
 }
