@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/610.5eddea70.chunk.js","mappings":"wHASA,UATa,WAET,OADAA,QAAQC,IAAI,+CAER","sources":["components/News/News.tsx"],"sourcesContent":["const News = () => {\n    console.log('Рисуем News!')\n    return (\n        <div>\n            News\n        </div>\n    );\n}\n\nexport default News;"],"names":["console","log"],"sourceRoot":""}

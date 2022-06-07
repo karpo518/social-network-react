@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_app=self.webpackChunkmy_app||[]).push([[610],{610:function(e,n,s){s.r(n);var u=s(184);n.default=function(){return console.log("\u0420\u0438\u0441\u0443\u0435\u043c News!"),(0,u.jsx)("div",{children:"News"})}}}]);
+//# sourceMappingURL=610.5eddea70.chunk.js.map
