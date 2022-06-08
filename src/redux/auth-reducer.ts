@@ -4,6 +4,7 @@ import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
 import { profileAPI, authAPI, updateAPIKey } from "../api/api";
 import { AppStateType } from "./redux-store";
+import { FormDataType } from '../components/Login/Login';
 
 const SET_USER_DATA = "MY-APP/AUTH/SET-USER-DATA";
 const GET_CAPTCHA_URL_SUCCESS = "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS";
@@ -124,12 +125,12 @@ export const getAuthUserData = (): ThunkType => {
   };
 };
 
-export const login = (formData: any): ThunkType => {
+export const login = (formData: FormDataType): ThunkType => {
   return async (dispatch) => {
     let email: string = formData.email, 
         password: string = formData.password, 
         rememberMe: boolean = formData.rememberMe, 
-        captcha: string = formData.captcha, 
+        captcha: string | undefined = formData.captcha, 
         apiKey: string = formData.apiKey;
 
     dispatch(toggleIsFetching(true));

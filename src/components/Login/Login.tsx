@@ -12,7 +12,7 @@ type PropsType = {
 }
 
 const Login: FC<PropsType> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: FormDataType) => {
     login(formData);
   };
 
@@ -28,9 +28,10 @@ const Login: FC<PropsType> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => 
   );
 };
 
-type FormDataType = {
+export type FormDataType = {
   email: string
   password: string
+  rememberMe: boolean
   apiKey: string
   captcha?: string
 }
@@ -47,9 +48,9 @@ const LoginForm: FC<FormPropsType> = (props) => {
     return (
     <form onSubmit={props.handleSubmit} className={s.form}>
 
-      { createField('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
-      { createField('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
-      { createField('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+      { createField<FormDataType>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+      { createField<FormDataType>('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
+      { createField<FormDataType>('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
 
       { 
         props.captchaUrl && 
@@ -58,13 +59,13 @@ const LoginForm: FC<FormPropsType> = (props) => {
                 <img onClick={props.updateCaptchaUrl} src={props.captchaUrl} alt={'captcha text'} />
             </div>
             <div className={s.fieldControl} >
-                { createField('Image text', 'captcha', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+                { createField<FormDataType>('Image text', 'captcha', [required], InputArea, {type: 'text', fieldType: 'input'}) }
             </div>
         </div> )
       }
       <div>
 
-        { createField(null, 'rememberMe', [], InputArea, {type: 'checkbox', fieldType: 'input', label: 'Remember me', 'id': 'rememberMe' }) }
+        { createField<FormDataType>(null, 'rememberMe', [], InputArea, {type: 'checkbox', fieldType: 'input', label: 'Remember me', 'id': 'rememberMe' }) }
 
       </div>
       {props.error && <div className={s.errors} > {props.error}</div>}

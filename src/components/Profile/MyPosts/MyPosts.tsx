@@ -46,7 +46,7 @@ const AddPostForm: FC<FormPropsType> = (props) => {
   return (
     <form onSubmit={props.handleSubmit} >
 
-      { createField('Write your message here..', 'newPostBody', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
+      { createField<FormDataType>('Write your message here..', 'newPostBody', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
 
       <div>
         <button >Add post</button>

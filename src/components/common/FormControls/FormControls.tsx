@@ -1,9 +1,24 @@
-import { Field } from "redux-form";
+import { Component, FC } from 'react';
+import { CommonFieldProps, Field, WrappedFieldInputProps, WrappedFieldMetaProps } from "redux-form";
+import { NestedKeyOf, TValueOf } from '../../../types/types';
+import { FieldValidatorType } from "../../../utils/validators/validators";
 import s from "./FormControls.module.css";
 
-export const InputArea = ({ input, meta: {touched, error}, fieldType, ...props }) => {
-  const hasError = touched && error;
+type PropsType = {
+  input: WrappedFieldInputProps
+  meta: WrappedFieldMetaProps
+  fieldType: string
+  id?: string
+  label?: string 
+  type: 'textarea' | 'input' | 'checkbox' 
+}
 
+export const InputArea: FC<PropsType> = ({ input, meta: {touched, error}, fieldType, ...props }) => {
+  const hasError = touched && error;
+  console.log('input var:')
+  console.log(input)
+  console.log('props var:')
+  console.log(props)
   return (
     <div className={s.formControl + " " + (hasError ? s.error : "")}>
       {props.label && props.type !== "checkbox" && (
@@ -36,13 +51,14 @@ export const InputArea = ({ input, meta: {touched, error}, fieldType, ...props }
   );
 };
 
-export const createField = (
-  placeholder,
-  name,
-  validators,
-  component,
-  props
-) => {
+export function  createField<TFormData extends object>(
+  placeholder: string | null,
+  name: NestedKeyOf<TFormData>,
+  validators: Array<FieldValidatorType>,
+  component: string | Component<any,any,any> | FC<any>,
+  props: any
+)
+{
   let wrapClasses = props.wrapClasses || "";
 
   if (props.type && props.type === "checkbox") {

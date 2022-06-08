@@ -1,13 +1,13 @@
 import { FC, FunctionComponent } from "react";
 import { Field, InjectedFormProps } from "redux-form";
 import { reduxForm } from "redux-form";
-import { ProfileType } from "../../../types/types";
+import { ContactsType, ProfileType } from "../../../types/types";
 import { createField, InputArea } from "../../common/FormControls/FormControls";
 import s from "./ProfileInfo.module.css";
 
-type FormDataType = {
-  profile: ProfileType
-} 
+type FormDataType = ProfileType
+
+type ContactsNamesType = Array<keyof ContactsType & string>
 
 type OwnPropsType = {
   profile: ProfileType
@@ -19,7 +19,7 @@ type PropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
 
 export const ProfileDataForm: FC<PropsType> = (props) => {
 
-  let contacts = Object.keys(props.profile.contacts)
+  let contacts  = Object.keys(props.profile.contacts) as ContactsNamesType
   
   return (
     <form onSubmit={props.handleSubmit} className={`${s.form} ${s.profileDataForm}` }>
@@ -34,11 +34,11 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
       </div>
 
       <div className={s.fieldItem}>
-        { createField('About me', 'aboutMe', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'About me'}) }
+        { createField<FormDataType>('About me', 'aboutMe', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'About me'}) }
       </div>
 
       <div className={s.fieldItem}>
-      { createField(null, 
+      { createField<FormDataType>(null, 
                     'lookingForAJob', 
                     [], 
                     InputArea, 
@@ -47,22 +47,23 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
       </div>
 
       <div className={s.fieldItem}>
-        { createField('Details', 'lookingForAJobDescription', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'My professional skills'}) }
+        { createField<FormDataType>('Details', 'lookingForAJobDescription', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'My professional skills'}) }
       </div>
       <div className={s.aboutItem}>
         <div className={s.aboutTitle}>Contacts: </div>
         <div className={s.contactList}>
-          {contacts.map(function (title) {
+          {contacts.map( (title) => {
               return (
-                <div key={title} className={s.contactFieldWrap} >
-                  {createField(title, 
-                                 `contacts.${title}`, 
-                                 [], 
-                                 InputArea, 
-                                 {type: 'text', fieldType: 'input', 'label': title}) 
-                  }
+                <div key={title} className={s.contactFieldWrap}>
+                  {createField<FormDataType>(
+                    title,
+                    `contacts.${title}`,
+                    [],
+                    InputArea,
+                    { type: "text", fieldType: "input", label: title }
+                  )}
                 </div>
-              )
+              );
           })}
         </div>
       </div>

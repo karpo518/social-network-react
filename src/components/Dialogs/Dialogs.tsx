@@ -68,7 +68,7 @@ const AddMessageForm: FC<FormPropsType> = (props) => {
   return (
     <form onSubmit={props.handleSubmit} className={s.form}>
       <div className="title">Send message</div>
-      { createField('Write your message here..', 'body', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
+      { createField<FormDataType>('Write your message here..', 'body', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
       <div>
         <button className={s.submit} >Send</button>
       </div>
