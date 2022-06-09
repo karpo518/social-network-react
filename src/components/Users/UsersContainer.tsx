@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { follow, unfollow, setCurrentPage, loadUsers } from "../../redux/users-reducer";
+import { follow, unfollow, loadUsers, usersAC } from "../../redux/users-reducer";
 import Users from "./Users";
 import { Component } from "react";
 import { compose } from "redux";
@@ -90,7 +90,7 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
 let dispatchProps = {
     follow,
     unfollow,
-    setCurrentPage,
+    setCurrentPage: usersAC.setCurrentPage,
     loadUsers
 }
 

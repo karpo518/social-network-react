@@ -4,8 +4,7 @@ import {
   getMessages,
   sendMessage,
   createNewDialog,
-  resetNewDialog,
-  setSelectedDialog,
+  DialogsAC,
 } from "../../redux/dialogs-reducer";
 import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
@@ -85,10 +84,10 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
 let mapDispatchToProps = {
   getDialogs,
   createNewDialog,
-  resetNewDialog,
+  resetNewDialog: DialogsAC.resetNewDialog,
   getMessages,
   sendMessage,
-  setSelectedDialog
+  setSelectedDialog: DialogsAC.setSelectedDialog
 }
 
 export default compose(

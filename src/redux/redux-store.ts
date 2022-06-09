@@ -21,6 +21,9 @@ let rootReducer = combineReducers({
 type RootReducerType = typeof rootReducer
 export type AppStateType = ReturnType<RootReducerType>
 
+// Вспомогательная функция для извлечения типа из action creators
+export type InferValueTypes<T> = T extends {[key: string]: infer U} ? U : never 
+
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

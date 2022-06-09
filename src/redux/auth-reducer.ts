@@ -3,12 +3,14 @@ import { Action } from "redux";
 import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
 import { profileAPI, authAPI, updateAPIKey } from "../api/api";
-import { AppStateType } from "./redux-store";
+import { AppStateType, InferValueTypes } from "./redux-store";
 import { FormDataType } from '../components/Login/Login';
 
-const SET_USER_DATA = "MY-APP/AUTH/SET-USER-DATA";
-const GET_CAPTCHA_URL_SUCCESS = "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS";
-const TOGGLE_IS_FETCHING = "MY-APP/AUTH/TOGGLE_IS_FETCHING";
+const authAT = {
+  SET_USER_DATA: "MY-APP/AUTH/SET-USER-DATA" as const,
+  GET_CAPTCHA_URL_SUCCESS: "MY-APP/AUTH/GET_CAPTCHA_URL_SUCCESS" as const,
+  TOGGLE_IS_FETCHING: "MY-APP/AUTH/TOGGLE_IS_FETCHING" as const,
+}
 
 let initialState = {
   userId: null as number | null,
@@ -30,15 +32,15 @@ type authUserDataType = {
   isAuth: boolean
 }
 
-const authReducer = (state: authType = initialState, action: ActionsTypes): authType => {
+const authReducer = (state: authType = initialState, action: TAuthActions): authType => {
   switch (action.type) {
-    case SET_USER_DATA: {
+    case authAT.SET_USER_DATA: {
       return { ...state, ...action.payload };
     }
-    case GET_CAPTCHA_URL_SUCCESS: {
+    case authAT.GET_CAPTCHA_URL_SUCCESS: {
       return { ...state, captchaUrl: action.captchaUrl };
     }
-    case TOGGLE_IS_FETCHING: {
+    case authAT.TOGGLE_IS_FETCHING: {
       return { ...state, isFetching: action.isFetching };
     }
 
@@ -47,6 +49,7 @@ const authReducer = (state: authType = initialState, action: ActionsTypes): auth
   }
 };
 
+/*
 type setAuthUserDataActionType = {
   type: typeof SET_USER_DATA;
   payload: authUserDataType;
@@ -66,61 +69,67 @@ export type showSubmitErrorsType = Action<typeof stopSubmit>
 
 type ActionsTypes = setAuthUserDataActionType | getCaptchaUrlSuccessActionType | toggleIsFetchingActionType | showSubmitErrorsType
 
-export const setAuthUserData = (authData: authUserDataType): setAuthUserDataActionType => ({
-  type: SET_USER_DATA,
-  payload: { ...authData },
-});
+*/
 
-export const getCaptchaUrlSuccess = (captchaUrl: string | null): getCaptchaUrlSuccessActionType => ({
-  type: GET_CAPTCHA_URL_SUCCESS,
-  captchaUrl,
-});
+export type TAuthActions = ReturnType<InferValueTypes<typeof authAC>>
 
-export const toggleIsFetching = (isFetching: boolean): toggleIsFetchingActionType => ({
-  type: TOGGLE_IS_FETCHING,
-  isFetching: isFetching,
-});
+export const authAC = {
+  setAuthUserData: (authData: authUserDataType) => ({
+    type: authAT.SET_USER_DATA,
+    payload: { ...authData },
+  }),
 
-export const showSubmitErrors = (formName: string, messages: Array<string>, fieldsErrors: any): showSubmitErrorsType => {
-    let formErrors: any = {};
-    for (let i = 0; i < fieldsErrors.length; i++) {
-      let fieldName: string = fieldsErrors[i]["field"];
-      let fieldError: string = fieldsErrors[i]["error"];
-      formErrors[fieldName] = fieldError;
+  getCaptchaUrlSuccess: (captchaUrl: string | null) => ({
+    type: authAT.GET_CAPTCHA_URL_SUCCESS,
+    captchaUrl,
+  } as const),
 
-      let messageKey: number  = messages.indexOf(fieldError);
-      if (messageKey > -1) {
-        messages.splice(messageKey, 1);
+  toggleIsFetching: (isFetching: boolean) => ({
+    type: authAT.TOGGLE_IS_FETCHING,
+    isFetching: isFetching,
+  }),
+
+  showSubmitErrors: (formName: string, messages: Array<string>, fieldsErrors: any): Action<typeof stopSubmit> => {
+      let formErrors: any = {};
+      for (let i = 0; i < fieldsErrors.length; i++) {
+        let fieldName: string = fieldsErrors[i]["field"];
+        let fieldError: string = fieldsErrors[i]["error"];
+        formErrors[fieldName] = fieldError;
+
+        let messageKey: number  = messages.indexOf(fieldError);
+        if (messageKey > -1) {
+          messages.splice(messageKey, 1);
+        }
       }
-    }
 
-    if (messages) {
-      formErrors["_error"] = messages.join(", ");
-    }
+      if (messages) {
+        formErrors["_error"] = messages.join(", ");
+      }
 
-    if (Object.entries(formErrors).length === 0) {
-      formErrors["_error"] = "Unknown error!";
-    }
+      if (Object.entries(formErrors).length === 0) {
+        formErrors["_error"] = "Unknown error!";
+      }
 
-    return stopSubmit(formName, formErrors);
-};
+      return stopSubmit(formName, formErrors);
+  } 
+}
 
 
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TAuthActions>
 
 export const getAuthUserData = (): ThunkType => {
   return async (dispatch) => {
-    dispatch(toggleIsFetching(true));
+    dispatch(authAC.toggleIsFetching(true));
     let response = await authAPI.me();
     console.log("Авторизация получена!");
     if (response.data.resultCode === EResultCodes.Success) {
       let { id, email, login } = response.data.data;
       let response2 = await profileAPI.getProfile(id);
       console.log("Профиль получен!");
-      dispatch(toggleIsFetching(false));
+      dispatch(authAC.toggleIsFetching(false));
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
-      dispatch(setAuthUserData({userId: id, email, login, photoUrl, isAuth}));
+      dispatch(authAC.setAuthUserData({userId: id, email, login, photoUrl, isAuth}));
     }
   };
 };
@@ -133,28 +142,28 @@ export const login = (formData: FormDataType): ThunkType => {
         captcha: string | undefined = formData.captcha, 
         apiKey: string = formData.apiKey;
 
-    dispatch(toggleIsFetching(true));
+    dispatch(authAC.toggleIsFetching(true));
 
     let response = await authAPI.login(email, password, rememberMe, captcha);
-    dispatch(toggleIsFetching(false));
+    dispatch(authAC.toggleIsFetching(false));
     if (response.data.resultCode === EResultCodes.Success) {
       updateAPIKey(apiKey)
       let {userId, login} = response.data.data;
       let response2 = await profileAPI.getProfile(userId);
       let photoUrl = response2.data.photos.small;
       let isAuth = true;
-      dispatch(getCaptchaUrlSuccess(null));
-      dispatch(setAuthUserData({userId, email, login, photoUrl, isAuth }));
+      dispatch(authAC.getCaptchaUrlSuccess(null));
+      dispatch(authAC.setAuthUserData({userId, email, login, photoUrl, isAuth }));
     } else {
       if (response.data.resultCode === EResultCodeCaptcha.CaptchaIsRequired) {
         let response3 = await authAPI.captchaUrl();
-        dispatch(getCaptchaUrlSuccess(response3.data.url));
+        dispatch(authAC.getCaptchaUrlSuccess(response3.data.url));
         dispatch(
-          showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
+          authAC.showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
         );
       } else {
         dispatch(
-          showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
+          authAC.showSubmitErrors('login', response.data.messages, response.data.fieldsErrors)
         );
       }
     }
@@ -164,15 +173,15 @@ export const login = (formData: FormDataType): ThunkType => {
 export const updateCaptchaUrl = (): ThunkType => {
   return async (dispatch: any) => {
     let response = await authAPI.captchaUrl()
-    dispatch(getCaptchaUrlSuccess(response.data.url))
+    dispatch(authAC.getCaptchaUrlSuccess(response.data.url))
   }
 }
 
 export const logout = (formData: any): ThunkType => {
   return async (dispatch: any) => {
-    dispatch(toggleIsFetching(true))
+    dispatch(authAC.toggleIsFetching(true))
     let response = await authAPI.logout()
-    dispatch(toggleIsFetching(false))
+    dispatch(authAC.toggleIsFetching(false))
     if (response.data.resultCode === EResultCodes.Success) {
       let userId = null,
           email = null,
@@ -181,7 +190,7 @@ export const logout = (formData: any): ThunkType => {
           isAuth = false 
 
       updateAPIKey('')
-      dispatch(setAuthUserData({userId, email, login, photoUrl, isAuth}))
+      dispatch(authAC.setAuthUserData({userId, email, login, photoUrl, isAuth}))
     }
     console.log(formData);
   }
