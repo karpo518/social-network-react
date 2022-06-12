@@ -1,17 +1,17 @@
-import { FC, FunctionComponent } from "react";
+import { FC } from "react";
 import { Field, InjectedFormProps } from "redux-form";
 import { reduxForm } from "redux-form";
-import { ContactsType, ProfileType } from "../../../types/types";
+import { TContacts, TProfile } from "../../../types/types";
 import { createField, InputArea } from "../../common/FormControls/FormControls";
 import s from "./ProfileInfo.module.css";
 
-type FormDataType = ProfileType
+type FormDataType = TProfile
 
-type ContactsNamesType = Array<keyof ContactsType & string>
+type ContactsNamesType = Array<keyof TContacts & string>
 
 type OwnPropsType = {
-  profile: ProfileType
-  initialValues: ProfileType
+  profile: TProfile
+  initialValues: TProfile
   onSubmit: (formData: any) => void
 }
 

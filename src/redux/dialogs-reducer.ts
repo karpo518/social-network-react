@@ -1,7 +1,8 @@
 import { reset } from "redux-form";
 import { ThunkAction } from "redux-thunk";
-import { dialogsAPI, profileAPI } from "../api/api";
-import { DialogType } from "../types/types";
+import { dialogsAPI } from "../api/dialogs-api";
+import { profileAPI } from "../api/profile-api";
+import { TDialog } from "../types/types";
 import { AppStateType, InferValueTypes } from "./redux-store";
 
 const dialogsAT = {
@@ -14,15 +15,15 @@ const dialogsAT = {
 }
 
 let initialState = {
-    dialogs: [] as Array<DialogType>,
-    messages: [] as Array<messageType>,
+    dialogs: [] as Array<TDialog>,
+    messages: [] as Array<TMessage>,
     selectedId: null as number | null,
-    newDialog: null as DialogType | null,
+    newDialog: null as TDialog | null,
 }
 
 type InitialStateType = typeof initialState
 
-type messageType = {
+type TMessage = {
     id: string;
     body: string;
     translatedBody: string | null;
@@ -76,12 +77,12 @@ const dialogsReducer = (state: InitialStateType = initialState, action: TDialogs
 export type TDialogsActions = ReturnType<InferValueTypes<typeof DialogsAC>>
 
 export const DialogsAC = {
-    setMessages: (messages: Array<messageType>) => ({ type: dialogsAT.SET_MESSAGES, messages: messages}),
-    setDialogs: (dialogs: Array<DialogType>) => ({ type: dialogsAT.SET_DIALOGS, dialogs }),
-    setNewDialog: (newDialog: DialogType) => ({ type: dialogsAT.SET_NEW_DIALOG, newDialog}),
+    setMessages: (messages: Array<TMessage>) => ({ type: dialogsAT.SET_MESSAGES, messages: messages}),
+    setDialogs: (dialogs: Array<TDialog>) => ({ type: dialogsAT.SET_DIALOGS, dialogs }),
+    setNewDialog: (newDialog: TDialog) => ({ type: dialogsAT.SET_NEW_DIALOG, newDialog}),
     resetNewDialog: () => ({ type: dialogsAT.RESET_NEW_DIALOG }),
     setSelectedDialog: (selectedId: number) => ({ type: dialogsAT.SET_SELECTED_DIALOG, selectedId }),
-    addMessage: (message: messageType) => ({ type: dialogsAT.ADD_MESSAGE, message }),
+    addMessage: (message: TMessage) => ({ type: dialogsAT.ADD_MESSAGE, message }),
 }
 
 type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TDialogsActions>
@@ -91,7 +92,7 @@ export const getDialogs = (selectedId: number): ThunkType => {
     return async (dispatch) => {
 
         let response = await dialogsAPI.get()
-        let dialogs: Array<DialogType> = response.data;
+        let dialogs: Array<TDialog> = response.data;
         dispatch(DialogsAC.setDialogs(dialogs));
         let dialogExists = dialogs.some((d) => d.id === selectedId);
         if(selectedId && !dialogExists) {
@@ -120,7 +121,7 @@ export const createNewDialog = (userId: number): ThunkType => {
     return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
         let p = response.data
-        let newDialog: DialogType = { id: userId, 
+        let newDialog: TDialog = { id: userId, 
                                       userName: p.fullName, 
                                       hasNewMessages: false, 
                                       lastUserActivityDate: '',

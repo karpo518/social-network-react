@@ -10,18 +10,18 @@ export type NestedKeyOf<ObjectType extends object> = {
 : `${Key}`
 }[keyof ObjectType & string];
 
-export type PostType = {
+export type TPost = {
     id: number
     message: string
     likesCount: number
 }
 
-export type PhotosType = {
+export type TPhotos = {
     small: string | null 
     large: string | null
 }
 
-export type ContactsType = {
+export type TContacts = {
     github: string
     vk: string
     facebook: string
@@ -32,32 +32,32 @@ export type ContactsType = {
     mainLink: string
 }
 
-export type ProfileType = {
+export type TProfile = {
     userId: number | null
     lookingForAJob: boolean
     lookingForAJobDescription: string
     fullName: string
-    contacts: ContactsType
-    photos: PhotosType
+    contacts: TContacts
+    photos: TPhotos
     aboutMe?: string
 }
-export type UserType = {
+export type TUser = {
     id: number
     name: string
-    photos: PhotosType
+    photos: TPhotos
     status: string | null
     followed: boolean
     uniqueUrlName: string | null
 }
 
-export type FriendType =
+export type TFriend =
 {
     id: number
     name: string
     image: string
 }
 
-export type MessageType = {
+export type TMessage = {
     id: string
     senderId: number
     senderName: string,
@@ -68,14 +68,14 @@ export type MessageType = {
     viewed: boolean
 }
 
-export type NewMessageType = {
+export type TNewMessage = {
     deletedBySender: boolean
     deletedByRecipient: boolean
     isSpam: boolean
     distributionId: any
 }
 
-export type DialogType = {
+export type TDialog = {
     id: number
     userName: string
     hasNewMessages: boolean,

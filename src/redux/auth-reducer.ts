@@ -2,7 +2,9 @@ import { EResultCodes, EResultCodeCaptcha } from './../api/api';
 import { Action } from "redux";
 import { stopSubmit } from "redux-form";
 import { ThunkAction } from "redux-thunk";
-import { profileAPI, authAPI, updateAPIKey } from "../api/api";
+import { updateAPIKey } from "../api/api";
+import { profileAPI } from "../api/profile-api";
+import { authAPI } from "../api/auth-api";
 import { AppStateType, InferValueTypes } from "./redux-store";
 import { FormDataType } from '../components/Login/Login';
 
@@ -49,28 +51,6 @@ const authReducer = (state: authType = initialState, action: TAuthActions): auth
   }
 };
 
-/*
-type setAuthUserDataActionType = {
-  type: typeof SET_USER_DATA;
-  payload: authUserDataType;
-}
-
-type getCaptchaUrlSuccessActionType = {
-  type: typeof GET_CAPTCHA_URL_SUCCESS;
-  captchaUrl: string | null;
-}
-
-type toggleIsFetchingActionType = {
-  type: typeof TOGGLE_IS_FETCHING;
-  isFetching: boolean;
-}
-
-export type showSubmitErrorsType = Action<typeof stopSubmit>
-
-type ActionsTypes = setAuthUserDataActionType | getCaptchaUrlSuccessActionType | toggleIsFetchingActionType | showSubmitErrorsType
-
-*/
-
 export type TAuthActions = ReturnType<InferValueTypes<typeof authAC>>
 
 export const authAC = {
@@ -115,9 +95,9 @@ export const authAC = {
 }
 
 
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TAuthActions>
+export type TAuthThunk = ThunkAction<Promise<void>, AppStateType, unknown, TAuthActions>
 
-export const getAuthUserData = (): ThunkType => {
+export const getAuthUserData = (): TAuthThunk => {
   return async (dispatch) => {
     dispatch(authAC.toggleIsFetching(true));
     let response = await authAPI.me();
@@ -131,10 +111,13 @@ export const getAuthUserData = (): ThunkType => {
       let isAuth = true;
       dispatch(authAC.setAuthUserData({userId: id, email, login, photoUrl, isAuth}));
     }
+    else {
+      dispatch(authAC.toggleIsFetching(false));
+    }
   };
 };
 
-export const login = (formData: FormDataType): ThunkType => {
+export const login = (formData: FormDataType): TAuthThunk => {
   return async (dispatch) => {
     let email: string = formData.email, 
         password: string = formData.password, 
@@ -148,9 +131,11 @@ export const login = (formData: FormDataType): ThunkType => {
     dispatch(authAC.toggleIsFetching(false));
     if (response.data.resultCode === EResultCodes.Success) {
       updateAPIKey(apiKey)
-      let {userId, login} = response.data.data;
-      let response2 = await profileAPI.getProfile(userId);
-      let photoUrl = response2.data.photos.small;
+      let response2 = await authAPI.me();
+      let login = response2.data.data.login
+      let userId = response2.data.data.id
+      let response3 = await profileAPI.getProfile(userId);
+      let photoUrl = response3.data.photos.small;
       let isAuth = true;
       dispatch(authAC.getCaptchaUrlSuccess(null));
       dispatch(authAC.setAuthUserData({userId, email, login, photoUrl, isAuth }));
@@ -170,15 +155,15 @@ export const login = (formData: FormDataType): ThunkType => {
   };
 };
 
-export const updateCaptchaUrl = (): ThunkType => {
+export const updateCaptchaUrl = (): TAuthThunk => {
   return async (dispatch: any) => {
     let response = await authAPI.captchaUrl()
     dispatch(authAC.getCaptchaUrlSuccess(response.data.url))
   }
 }
 
-export const logout = (formData: any): ThunkType => {
-  return async (dispatch: any) => {
+export const logout = (): TAuthThunk => {
+  return async (dispatch) => {
     dispatch(authAC.toggleIsFetching(true))
     let response = await authAPI.logout()
     dispatch(authAC.toggleIsFetching(false))
@@ -192,7 +177,7 @@ export const logout = (formData: any): ThunkType => {
       updateAPIKey('')
       dispatch(authAC.setAuthUserData({userId, email, login, photoUrl, isAuth}))
     }
-    console.log(formData);
+    
   }
 }
 

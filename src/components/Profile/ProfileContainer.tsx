@@ -5,12 +5,12 @@ import { getUserProfile,getStatus,updateStatus,savePhoto,saveProfile } from "../
 import { useParams,useLocation,useNavigate } from "react-router-dom";
 import { compose } from "redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
-import { ProfileType } from "../../types/types";
+import { TProfile } from "../../types/types";
 import { authType } from "../../redux/auth-reducer";
 import { AppStateType } from "../../redux/redux-store";
 
 type MapStatePropsType = {
-  profile: ProfileType | null
+  profile: TProfile | null
   status: string
   auth: authType
 }
@@ -20,7 +20,7 @@ type MapDispatchPropsType = {
   getStatus: (userId: number) => any
   updateStatus: (newStatus: string) => void
   savePhoto: (file: any) => void
-  saveProfile: (newProfile: ProfileType) => any 
+  saveProfile: (newProfile: TProfile) => any 
 }
 
 type HOCPropsType = {

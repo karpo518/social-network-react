@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { FriendType } from "../../types/types";
+import { TFriend } from "../../types/types";
 import Friend from "./Friend/Friend";
 import s from "./Navbar.module.css";
 
 type PropsType = {
-  friends: Array<FriendType>
+  friends: Array<TFriend>
 }
 
 const Navbar: FC<PropsType> = (props) => {

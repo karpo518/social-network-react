@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import {profileAC, sendPost } from "../../../redux/profile-reducer";
 import { AppStateType } from "../../../redux/redux-store";
-import { PostType } from "../../../types/types";
+import { TPost } from "../../../types/types";
 import MyPosts from "./MyPosts";
 
 type MapStatePropsType = {
-  posts: Array<PostType>
+  posts: Array<TPost>
   newPostText: string
 }
 

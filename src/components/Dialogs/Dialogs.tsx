@@ -5,13 +5,13 @@ import Message from "./Message/Message";
 import { InjectedFormProps, reduxForm } from "redux-form";
 import { createField, InputArea } from "../common/FormControls/FormControls";
 import { required, maxLength} from "../../utils/validators/validators";
-import { DialogType, MessageType } from "../../types/types";
+import { TDialog, TMessage } from "../../types/types";
 
 type PropsType = {
   selectedId: number | null
-  dialogs: Array<DialogType>
-  messages: Array<MessageType>
-  newDialog: DialogType | null
+  dialogs: Array<TDialog>
+  messages: Array<TMessage>
+  newDialog: TDialog | null
   sendMessage: (userId: number, formData: any) => void
 }
 
@@ -24,12 +24,12 @@ const Dialogs: FC<PropsType> = (props) => {
 
   let allDialogs = props.newDialog === null ? props.dialogs : [props.newDialog, ...props.dialogs]
 
-  let dialogsElements = allDialogs.map((d: DialogType) => {
+  let dialogsElements = allDialogs.map((d: TDialog) => {
         return <DialogItem key={d.id} {...d} />
     }
   )
 
-  let messagesElements = props.messages.map((m: MessageType) => {
+  let messagesElements = props.messages.map((m: TMessage) => {
       return (
         <Message {...m} selectedId={props.selectedId} />
       )

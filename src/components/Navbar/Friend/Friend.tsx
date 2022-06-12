@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
-import { FriendType } from "../../../types/types";
+import { TFriend } from "../../../types/types";
 import s from "./../Navbar.module.css";
 
-type PropsType = FriendType
+type PropsType = TFriend
 
 const Friend = (props: PropsType) => {
 

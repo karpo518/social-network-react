@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { AppStateType } from '../../redux/redux-store';
-import { FriendType } from '../../types/types';
+import { TFriend } from '../../types/types';
 import Navbar from './Navbar';
 
 type MapStatePropsType = {
-  friends: Array<FriendType>
+  friends: Array<TFriend>
 }
 
 let mapStateToProps = (state: AppStateType):MapStatePropsType => {

@@ -1,6 +1,6 @@
 import { AppStateType, InferValueTypes } from './redux-store';
-import { UserType } from './../types/types';
-import { usersAPI } from "../api/api";
+import { TUser } from './../types/types';
+import { usersAPI } from "../api/users-api";
 import { updateObjectInArray } from "../utils/object-helpers";
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -18,7 +18,7 @@ const usersAT =
 }
 
 let initialState = {
-    users: [] as Array<UserType>,
+    users: [] as Array<TUser>,
     pageSize: 100,
     totalUsersCount: 0,
     currentPage: 1,
@@ -76,7 +76,7 @@ export const usersAC = {
 
     followSuccess: (userId: number) => ({ type: usersAT.FOLLOW, userId: userId }),
     unfollowSuccess: (userId: number) => ({ type: usersAT.UNFOLLOW, userId: userId }),
-    setUsers: (users: Array<UserType>) => ({ type: usersAT.SET_USERS, users: [...users] }),
+    setUsers: (users: Array<TUser>) => ({ type: usersAT.SET_USERS, users: [...users] }),
     setCurrentPage: (currentPage: number) => ({ type: usersAT.SET_CURRENT_PAGE, currentPage: currentPage }),
     setTotalUsersCount: (totalUsersCount: number) => ({ type: usersAT.SET_TOTAL_USERS_COUNT, totalUsersCount: totalUsersCount }),
     toggleIsFetching: (isFetching: boolean) => ({ type: usersAT.TOGGLE_IS_FETCHING, isFetching: isFetching }),

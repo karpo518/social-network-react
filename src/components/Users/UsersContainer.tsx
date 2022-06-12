@@ -4,11 +4,11 @@ import Users from "./Users";
 import { Component } from "react";
 import { compose } from "redux";
 import { getUsers, getCurrentPage, getFollowingInProgress, getIsFetching, getPageSize, getTotalUsersCount } from "../../redux/users-selectors";
-import { UserType } from "../../types/types";
+import { TUser } from "../../types/types";
 import { AppStateType } from "../../redux/redux-store";
 
 type MapStatePropsType = {
-  users: Array<UserType>
+  users: Array<TUser>
   pageSize: number
   totalUsersCount: number
   currentPage: number

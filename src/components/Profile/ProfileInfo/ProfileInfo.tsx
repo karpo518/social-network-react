@@ -4,16 +4,16 @@ import s from "./ProfileInfo.module.css";
 import { NavLink } from "react-router-dom";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import ProfileDataForm from "./ProfileDataForm";
-import { ProfileType } from "../../../types/types";
+import { TProfile } from "../../../types/types";
 import ProfileData from "./ProfileData";
 
 type PropsType = {
-  profile: ProfileType
+  profile: TProfile
   status: string
   isOwner: boolean
   updateStatus: (newStatus: string) => void
   savePhoto: (file: any) => void
-  saveProfile: (newProfile: ProfileType) => any 
+  saveProfile: (newProfile: TProfile) => any 
 }
 
 const ProfileInfo: FC<PropsType> = ({profile, status, updateStatus, isOwner, savePhoto, saveProfile }) => {

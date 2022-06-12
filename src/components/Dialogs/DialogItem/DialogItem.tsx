@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { DialogType } from "../../../types/types";
+import { TDialog } from "../../../types/types";
 import s from "./../Dialogs.module.css";
 import defaultPhoto from "../../../assets/images/user.jpg";
 
-const DialogItem: FC<DialogType> = (props) => {
+const DialogItem: FC<TDialog> = (props) => {
   let path = `/dialogs/${props.id}`;
   let image = props.photos.small || defaultPhoto
   return (

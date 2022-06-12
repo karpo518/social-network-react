@@ -1,6 +1,7 @@
 import { reset } from 'redux-form';
-import { PostType, PhotosType, ProfileType } from './../types/types';
-import { EResultCodes, profileAPI } from "../api/api";
+import { TPost, TPhotos, TProfile } from './../types/types';
+import { EResultCodes } from "../api/api";
+import { profileAPI } from "../api/profile-api";
 import { authAC} from "./auth-reducer";
 import { AppStateType, InferValueTypes } from './redux-store';
 import { ThunkAction } from 'redux-thunk';
@@ -21,9 +22,9 @@ let initialState = {
         {'id': 2, 'message': 'It is my first post!', 'likesCount': 20}, 
         {'id': 3, 'message': 'It is great!', 'likesCount': 20}, 
         {'id': 4, 'message': 'LOL :D', 'likesCount': 20}, 
-    ] as Array<PostType>,
+    ] as Array<TPost>,
     newPostText: 'it-kamasutra.com',
-    profile: null as ProfileType | null,
+    profile: null as TProfile | null,
     status: '' as string,
     
 
@@ -66,7 +67,7 @@ const profileReducer = (state: initialStateType = initialState, action: TProfile
         }
 
         case profileAT.SAVE_PHOTO_SUCCESS: {
-            return {...state, profile: {...state.profile, photos: action.photos } as ProfileType }
+            return {...state, profile: {...state.profile, photos: action.photos } as TProfile }
         }
 
         case profileAT.DELETE_POST: {
@@ -85,9 +86,9 @@ export type TProfileActions = ReturnType<InferValueTypes<typeof profileAC | type
 export const profileAC = {
     addPost: (newPostBody: string) => ({type: profileAT.ADD_POST, newPostBody} as const),
     updateNewPostText: (text: string) => ({type: profileAT.UPDATE_NEW_POST_TEXT, newText: text} as const),
-    setUserProfile: (profile: ProfileType) => ({type: profileAT.SET_USER_PROFILE, profile} as const),
+    setUserProfile: (profile: TProfile) => ({type: profileAT.SET_USER_PROFILE, profile} as const),
     setStatus: (status: string) => ({type: profileAT.SET_STATUS, status} as const),
-    savePhotoSuccess: (photos: PhotosType) => ({type: profileAT.SAVE_PHOTO_SUCCESS, photos} as const),
+    savePhotoSuccess: (photos: TPhotos) => ({type: profileAT.SAVE_PHOTO_SUCCESS, photos} as const),
     deletePost: (postId: number) => ({type: profileAT.DELETE_POST, postId} as const),
 }
 
@@ -127,7 +128,7 @@ export const savePhoto = (file: any): ThunkType => {
     }
 }
 
-export const saveProfile = (profile: ProfileType): ThunkType => {
+export const saveProfile = (profile: TProfile): ThunkType => {
     return async (dispatch: any, getState ) => {
 
         let userId = getState().auth.userId

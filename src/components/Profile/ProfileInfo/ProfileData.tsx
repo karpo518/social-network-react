@@ -1,10 +1,10 @@
 import { FC } from "react"
-import { ContactsType, ProfileType } from "../../../types/types"
+import { TContacts, TProfile } from "../../../types/types"
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks"
 import s from "./ProfileInfo.module.css";
 
 type PropsType = {
-    profile: ProfileType
+    profile: TProfile
     status: string
     isOwner: boolean
     updateStatus: (newStatus: string) => void
@@ -13,7 +13,7 @@ type PropsType = {
   
 const ProfileData: FC<PropsType> = ({profile, status, isOwner, updateStatus, activateEditMode}) => {
   
-    let availableContacts = Object.keys(profile.contacts).filter((k) => { return profile.contacts[k as keyof ContactsType]  })
+    let availableContacts = Object.keys(profile.contacts).filter((k) => { return profile.contacts[k as keyof TContacts]  })
   
     return (
       <div className={s.description}>
@@ -51,7 +51,7 @@ const ProfileData: FC<PropsType> = ({profile, status, isOwner, updateStatus, act
                   <Contact
                     key={title}
                     contactTitle={title}
-                    contactValue={profile.contacts[title as keyof ContactsType]}
+                    contactValue={profile.contacts[title as keyof TContacts]}
                   />
                 );
               })}

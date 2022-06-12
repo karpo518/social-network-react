@@ -11,15 +11,15 @@ import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
 import { useParams } from "react-router-dom";
 import { FC, useEffect } from "react";
-import { DialogType, MessageType } from "../../types/types";
+import { TDialog, TMessage } from "../../types/types";
 import { authType } from "../../redux/auth-reducer";
 import { AppStateType } from "../../redux/redux-store";
 
 type MapStatePropsType = {
-  dialogs: Array<DialogType>
-  messages: Array<MessageType>
+  dialogs: Array<TDialog>
+  messages: Array<TMessage>
   selectedId: number | null,
-  newDialog: DialogType | null,
+  newDialog: TDialog | null,
   auth: authType,
 }
 

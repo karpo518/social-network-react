@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { InjectedFormProps, reduxForm } from "redux-form";
-import { PostType } from "../../../types/types";
+import { TPost } from "../../../types/types";
 import { maxLength, required } from "../../../utils/validators/validators";
 import { createField, InputArea } from "../../common/FormControls/FormControls";
 import s from "./MyPosts.module.css";
@@ -9,7 +9,7 @@ import Post from "./Post/Post";
 let maxLength300 = maxLength(300)
 
 type PropsType = {
-  posts: Array<PostType>
+  posts: Array<TPost>
   sendPost: (newPostBody: string) => void
 }
 

@@ -1,9 +1,9 @@
 import s from "./Post.module.css";
 import userPhoto from "../../../../assets/images/user.jpg";
 import { FC } from "react";
-import { PostType } from "../../../../types/types";
+import { TPost } from "../../../../types/types";
 
-const Post: FC<PostType> = (props) => {
+const Post: FC<TPost> = (props) => {
 
   return (
     <div className={s.item}>

@@ -1,13 +1,13 @@
 import s from "./../Dialogs.module.css";
 import defaultPhoto from "../../../assets/images/user.jpg";
 import { FC } from "react";
-import { MessageType } from "../../../types/types";
+import { TMessage } from "../../../types/types";
 
 type OtherPropsType = {
   selectedId: number | null
 }
 
-type PropsType = MessageType & OtherPropsType
+type PropsType = TMessage & OtherPropsType
 
 const Message: FC<PropsType> = (props) => {
   

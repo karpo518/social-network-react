@@ -2,9 +2,11 @@ import { NavLink } from "react-router-dom";
 import s from "./Header.module.css";
 import userPhoto from "../../assets/images/user.jpg";
 import logo from "../../assets/images/logo.png";
-import { propsType } from "./HeaderContainer";
+import { PropsType } from "./HeaderContainer";
+import { FC } from "react";
 
-const Header = (props: propsType) => {
+const Header:FC<PropsType> = (props) => {
+
   return (
     <header className={s.header}>
       <div className={s.logo}>
@@ -20,7 +22,7 @@ const Header = (props: propsType) => {
             </div>
             <div className={s.hiddenMenu} >
               <ul>
-                <li><span onClick={props.logout}>Выйти</span></li>
+                <li><span onClick={ props.logout }>Выйти</span></li>
               </ul>
             </div>  
           </div>
