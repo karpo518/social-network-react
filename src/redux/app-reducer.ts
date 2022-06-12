@@ -1,8 +1,9 @@
-import { ThunkAction } from "redux-thunk";
 import { getAuthUserData } from "./auth-reducer";
-import { AppStateType } from "./redux-store";
+import { InferValueTypes, TBaseThunk } from "./redux-store";
 
-const SET_INITIALIZED = 'MY-APP/APP/SET_INITIALIZED';
+const appAT = {
+  SET_INITIALIZED: 'MY-APP/APP/SET_INITIALIZED' as const
+}
 
 let initialState = {
     initialized: false as boolean,
@@ -10,10 +11,10 @@ let initialState = {
 
 type initialStateType = typeof initialState
 
-const appReducer = (state: initialStateType = initialState, action: ActionsTypes): initialStateType => {
+const appReducer = (state: initialStateType = initialState, action: TAppActions): initialStateType => {
     
     switch(action.type) {
-        case SET_INITIALIZED: {
+        case appAT.SET_INITIALIZED: {
             return {...state, initialized: action.initialized};
         }
         default:
@@ -21,22 +22,17 @@ const appReducer = (state: initialStateType = initialState, action: ActionsTypes
     }
 };
 
-type setInitializedActionType = {
-  type: typeof SET_INITIALIZED;
-  initialized: boolean;
+export type TAppActions = ReturnType<InferValueTypes<typeof appAC>>
+
+export const appAC = {
+  setInitialized: (initialized: boolean) => ({type: appAT.SET_INITIALIZED, initialized})
 }
 
-type ActionsTypes = setInitializedActionType
-
-export const setInitialized = (initialized: boolean): setInitializedActionType => ({type: SET_INITIALIZED, initialized});
-
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
-
-export const initializeApp = (): ThunkType => {
+export const initializeApp = (): TBaseThunk<TAppActions> => {
   return async (dispatch: any) => {
     let promise = dispatch(getAuthUserData())
     await Promise.all([promise])
-    dispatch(setInitialized(true))
+    dispatch(appAC.setInitialized(true))
   }
 }
 

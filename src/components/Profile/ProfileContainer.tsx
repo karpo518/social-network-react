@@ -6,13 +6,13 @@ import { useParams,useLocation,useNavigate } from "react-router-dom";
 import { compose } from "redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { TProfile } from "../../types/types";
-import { authType } from "../../redux/auth-reducer";
+import { TAuthState } from "../../redux/auth-reducer";
 import { AppStateType } from "../../redux/redux-store";
 
 type MapStatePropsType = {
   profile: TProfile | null
   status: string
-  auth: authType
+  auth: TAuthState
 }
 
 type MapDispatchPropsType = {

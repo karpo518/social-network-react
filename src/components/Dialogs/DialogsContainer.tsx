@@ -12,7 +12,7 @@ import { compose } from "redux";
 import { useParams } from "react-router-dom";
 import { FC, useEffect } from "react";
 import { TDialog, TMessage } from "../../types/types";
-import { authType } from "../../redux/auth-reducer";
+import { TAuthState } from "../../redux/auth-reducer";
 import { AppStateType } from "../../redux/redux-store";
 
 type MapStatePropsType = {
@@ -20,7 +20,7 @@ type MapStatePropsType = {
   messages: Array<TMessage>
   selectedId: number | null,
   newDialog: TDialog | null,
-  auth: authType,
+  auth: TAuthState,
 }
 
 type MapDispatchPropsType = {

@@ -1,11 +1,10 @@
 import { EResultCodes, EResultCodeCaptcha } from './../api/api';
 import { Action } from "redux";
 import { stopSubmit } from "redux-form";
-import { ThunkAction } from "redux-thunk";
 import { updateAPIKey } from "../api/api";
 import { profileAPI } from "../api/profile-api";
 import { authAPI } from "../api/auth-api";
-import { AppStateType, InferValueTypes } from "./redux-store";
+import { InferValueTypes, TBaseThunk } from "./redux-store";
 import { FormDataType } from '../components/Login/Login';
 
 const authAT = {
@@ -24,9 +23,9 @@ let initialState = {
   captchaUrl: null as string | null, // if null, then captcha is not required
 };
 
-export type authType = typeof initialState
+export type TAuthState = typeof initialState
 
-type authUserDataType = {
+type TAuthUserData = {
   userId: number | null, 
   email: string | null, 
   login: string | null, 
@@ -34,7 +33,7 @@ type authUserDataType = {
   isAuth: boolean
 }
 
-const authReducer = (state: authType = initialState, action: TAuthActions): authType => {
+const authReducer = (state: TAuthState = initialState, action: TAuthActions): TAuthState => {
   switch (action.type) {
     case authAT.SET_USER_DATA: {
       return { ...state, ...action.payload };
@@ -54,7 +53,7 @@ const authReducer = (state: authType = initialState, action: TAuthActions): auth
 export type TAuthActions = ReturnType<InferValueTypes<typeof authAC>>
 
 export const authAC = {
-  setAuthUserData: (authData: authUserDataType) => ({
+  setAuthUserData: (authData: TAuthUserData) => ({
     type: authAT.SET_USER_DATA,
     payload: { ...authData },
   }),
@@ -95,9 +94,7 @@ export const authAC = {
 }
 
 
-export type TAuthThunk = ThunkAction<Promise<void>, AppStateType, unknown, TAuthActions>
-
-export const getAuthUserData = (): TAuthThunk => {
+export const getAuthUserData = (): TBaseThunk<TAuthActions> => {
   return async (dispatch) => {
     dispatch(authAC.toggleIsFetching(true));
     let response = await authAPI.me();
@@ -117,7 +114,7 @@ export const getAuthUserData = (): TAuthThunk => {
   };
 };
 
-export const login = (formData: FormDataType): TAuthThunk => {
+export const login = (formData: FormDataType): TBaseThunk<TAuthActions> => {
   return async (dispatch) => {
     let email: string = formData.email, 
         password: string = formData.password, 
@@ -155,14 +152,14 @@ export const login = (formData: FormDataType): TAuthThunk => {
   };
 };
 
-export const updateCaptchaUrl = (): TAuthThunk => {
+export const updateCaptchaUrl = (): TBaseThunk<TAuthActions> => {
   return async (dispatch: any) => {
     let response = await authAPI.captchaUrl()
     dispatch(authAC.getCaptchaUrlSuccess(response.data.url))
   }
 }
 
-export const logout = (): TAuthThunk => {
+export const logout = (): TBaseThunk<TAuthActions> => {
   return async (dispatch) => {
     dispatch(authAC.toggleIsFetching(true))
     let response = await authAPI.logout()

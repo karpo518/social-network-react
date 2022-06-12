@@ -1,10 +1,11 @@
+
+import { FormAction } from 'redux-form';
 import { reset } from 'redux-form';
 import { TPost, TPhotos, TProfile } from './../types/types';
 import { EResultCodes } from "../api/api";
 import { profileAPI } from "../api/profile-api";
 import { authAC} from "./auth-reducer";
-import { AppStateType, InferValueTypes } from './redux-store';
-import { ThunkAction } from 'redux-thunk';
+import { InferValueTypes, TBaseThunk } from './redux-store';
 
 const profileAT =
 {
@@ -30,10 +31,10 @@ let initialState = {
 
 }
 
-type initialStateType = typeof initialState
+type TProfileState = typeof initialState
 
 
-const profileReducer = (state: initialStateType = initialState, action: TProfileActions): initialStateType => {
+const profileReducer = (state: TProfileState = initialState, action: TProfileActions): TProfileState => {
     
     switch(action.type) {
 
@@ -80,7 +81,7 @@ const profileReducer = (state: initialStateType = initialState, action: TProfile
     }
 };
 
-export type TProfileActions = ReturnType<InferValueTypes<typeof profileAC | typeof authAC.showSubmitErrors>>
+export type TProfileActions = ReturnType<InferValueTypes<typeof profileAC>>
 
 // action creators of profileReducer
 export const profileAC = {
@@ -92,26 +93,23 @@ export const profileAC = {
     deletePost: (postId: number) => ({type: profileAT.DELETE_POST, postId} as const),
 }
 
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TProfileActions>
-type SyncThunkType = ThunkAction<void, AppStateType, unknown, TProfileActions>
-
-export const getUserProfile = (userId: number): ThunkType => {
+export const getUserProfile = (userId: number): TBaseThunk<TProfileActions> => {
     
-    return async (dispatch: any) => {
+    return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
         dispatch(profileAC.setUserProfile(response.data));
     }
 }
 
-export const getStatus = (userId: number): ThunkType => {
-    return async (dispatch: any) => {
+export const getStatus = (userId: number): TBaseThunk<TProfileActions> => {
+    return async (dispatch) => {
         let response = await profileAPI.getStatus(userId)
         dispatch(profileAC.setStatus(response.data));
     }
 }
 
-export const updateStatus = (status: string): ThunkType => {
-    return async (dispatch: any) => {
+export const updateStatus = (status: string): TBaseThunk<TProfileActions> => {
+    return async (dispatch) => {
         let response = await profileAPI.updateStatus(status)
         if(response.data.resultCode === EResultCodes.Success) {
             dispatch(profileAC.setStatus(status));
@@ -119,8 +117,8 @@ export const updateStatus = (status: string): ThunkType => {
     }
 }
 
-export const savePhoto = (file: any): ThunkType => {
-    return async (dispatch: any) => {
+export const savePhoto = (file: File): TBaseThunk<TProfileActions> => {
+    return async (dispatch) => {
         let response = await profileAPI.savePhoto(file)
         if(response.data.resultCode === EResultCodes.Success && response.data.data.photos) {
             dispatch(profileAC.savePhotoSuccess(response.data.data.photos));
@@ -128,8 +126,8 @@ export const savePhoto = (file: any): ThunkType => {
     }
 }
 
-export const saveProfile = (profile: TProfile): ThunkType => {
-    return async (dispatch: any, getState ) => {
+export const saveProfile = (profile: TProfile): TBaseThunk<TProfileActions | FormAction > => {
+    return async (dispatch, getState ) => {
 
         let userId = getState().auth.userId
         if(userId) {     
@@ -145,11 +143,14 @@ export const saveProfile = (profile: TProfile): ThunkType => {
                 return Promise.reject(response.data.messages)
             }
         }
+        else {
+            throw new Error('userId can`t be null')
+        }
     }
 }
 
-export const sendPost = (newPostBody: string): SyncThunkType => {
-    return (dispatch: any) => {
+export const sendPost = (newPostBody: string): TBaseThunk<TProfileActions | FormAction, void> => {
+    return (dispatch) => {
         dispatch(profileAC.addPost(newPostBody))
         dispatch(reset('ProfileAddPostForm'));
     }

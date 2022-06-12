@@ -22,7 +22,7 @@ export const profileAPI = {
         console.log(`PUT: profile/status`)
         return instance.put<TResponse>(`profile/status`,{status: status});
     },
-    savePhoto(photoFile: any) {
+    savePhoto(photoFile: File) {
         console.log(`PUT: profile/photo`)
         let formData = new FormData()
         formData.append('image', photoFile)

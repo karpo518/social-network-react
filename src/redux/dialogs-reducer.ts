@@ -1,9 +1,9 @@
+import { Action } from "redux";
 import { reset } from "redux-form";
-import { ThunkAction } from "redux-thunk";
 import { dialogsAPI } from "../api/dialogs-api";
 import { profileAPI } from "../api/profile-api";
 import { TDialog } from "../types/types";
-import { AppStateType, InferValueTypes } from "./redux-store";
+import { InferValueTypes, TBaseThunk } from "./redux-store";
 
 const dialogsAT = {
     SET_NEW_DIALOG: "MY-APP/DIALOGS/SET_NEW_DIALOG" as const,
@@ -21,7 +21,7 @@ let initialState = {
     newDialog: null as TDialog | null,
 }
 
-type InitialStateType = typeof initialState
+type TDialogsState = typeof initialState
 
 type TMessage = {
     id: string;
@@ -34,7 +34,7 @@ type TMessage = {
     viewed: boolean;
 }
 
-const dialogsReducer = (state: InitialStateType = initialState, action: TDialogsActions): InitialStateType => {
+const dialogsReducer = (state: TDialogsState = initialState, action: TDialogsActions): TDialogsState => {
 
   switch (action.type) {
     case dialogsAT.SET_DIALOGS:
@@ -74,7 +74,7 @@ const dialogsReducer = (state: InitialStateType = initialState, action: TDialogs
   }
 };
 
-export type TDialogsActions = ReturnType<InferValueTypes<typeof DialogsAC>>
+export type TDialogsActions = ReturnType<InferValueTypes<typeof DialogsAC>> | Action<typeof reset>
 
 export const DialogsAC = {
     setMessages: (messages: Array<TMessage>) => ({ type: dialogsAT.SET_MESSAGES, messages: messages}),
@@ -85,9 +85,7 @@ export const DialogsAC = {
     addMessage: (message: TMessage) => ({ type: dialogsAT.ADD_MESSAGE, message }),
 }
 
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TDialogsActions>
-
-export const getDialogs = (selectedId: number): ThunkType => {
+export const getDialogs = (selectedId: number): TBaseThunk<TDialogsActions> => {
     
     return async (dispatch) => {
 
@@ -104,7 +102,7 @@ export const getDialogs = (selectedId: number): ThunkType => {
     };
 };
 
-export const getMessages = (selectedId: number): ThunkType => {
+export const getMessages = (selectedId: number): TBaseThunk<TDialogsActions> => {
     return async (dispatch) => {
         if(!selectedId) {
             dispatch( DialogsAC.setMessages([]) );
@@ -116,7 +114,7 @@ export const getMessages = (selectedId: number): ThunkType => {
     }
 }
 
-export const createNewDialog = (userId: number): ThunkType => {
+export const createNewDialog = (userId: number): TBaseThunk<TDialogsActions> => {
     
     return async (dispatch) => {
         let response = await profileAPI.getProfile(userId)
@@ -132,7 +130,7 @@ export const createNewDialog = (userId: number): ThunkType => {
     };
 }
 
-export const sendMessage = (userId: number, formData: any): ThunkType => {
+export const sendMessage = (userId: number, formData: any): TBaseThunk<TDialogsActions> => {
   
     return async (dispatch) => {
         let body = formData.body;

@@ -1,9 +1,8 @@
-import { AppStateType, InferValueTypes } from './redux-store';
+import { InferValueTypes, TBaseThunk } from './redux-store';
 import { TUser } from './../types/types';
 import { usersAPI } from "../api/users-api";
 import { updateObjectInArray } from "../utils/object-helpers";
 import { Dispatch } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 
 // action types of usersReduser
 const usersAT =
@@ -26,9 +25,9 @@ let initialState = {
     followingInProgress: [] as Array<number>, // Array of user ids
 };
 
-type initialStateType = typeof initialState
+type TUsersState = typeof initialState
 
-const usersReducer = (state: initialStateType = initialState, action: TUsersActions): initialStateType => {
+const usersReducer = (state: TUsersState = initialState, action: TUsersActions): TUsersState => {
     
     switch(action.type) {
         case usersAT.FOLLOW:
@@ -84,9 +83,8 @@ export const usersAC = {
 }
 
 type DispatchType = Dispatch<TUsersActions>
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, TUsersActions>
 
-export const loadUsers = (currentPage: number, pageSize: number): ThunkType => {
+export const loadUsers = (currentPage: number, pageSize: number): TBaseThunk<TUsersActions> => {
     return async (dispatch) => {
 
         dispatch(usersAC.toggleIsFetching(true));
@@ -111,14 +109,14 @@ const _followUnfollowFlow = async (dispatch: DispatchType,
     dispatch(usersAC.toggleIsFollowingInProgress(false, userId));
 }
 
-export const follow = (userId: number): ThunkType => {
+export const follow = (userId: number): TBaseThunk<TUsersActions> => {
     return async (dispatch: any) => {
 
         _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), usersAC.followSuccess)
     }
 }
 
-export const unfollow = (userId: number): ThunkType => {
+export const unfollow = (userId: number): TBaseThunk<TUsersActions> => {
     return async (dispatch: any) => {
 
         _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), usersAC.unfollowSuccess)
