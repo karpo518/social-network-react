@@ -2,25 +2,25 @@ import {logout} from '../../redux/auth-reducer';
 import Header from './Header';
 import { Component } from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { AppStateType } from '../../redux/redux-store';
+import { TAppState } from '../../redux/redux-store';
 import Preloader from '../common/Preloader/Preloader';
 
-type statePropsType = {
+type TStateProps = {
   isAuth: boolean
   login: string | null
   photoUrl: string | null
   isFetching: boolean
 }
 
-type dispatchPropsType = {
+type TDispatchProps = {
   logout: () => void
 }
 
-type ownPropsType = {}
+type TOwnProps = {}
 
-type ownFunctionsType = {}
+type TOwnFunctions = {}
 
-export type PropsType = ownPropsType & statePropsType & dispatchPropsType
+export type PropsType = TOwnProps & TStateProps & TDispatchProps
 
 class HeaderContainer extends Component<PropsType> {
   componentDidMount = () => {
@@ -37,7 +37,7 @@ class HeaderContainer extends Component<PropsType> {
   }
 }
 
-let mapStateToProps: MapStateToProps<statePropsType, ownPropsType, AppStateType> = (state, props)=> {
+let mapStateToProps: MapStateToProps<TStateProps, TOwnProps, TAppState> = (state, props)=> {
   return {
     isAuth: state.auth.isAuth, 
     login: state.auth.login, 
@@ -46,8 +46,8 @@ let mapStateToProps: MapStateToProps<statePropsType, ownPropsType, AppStateType>
   }
 }
 
-let mapDispatchToProps: MapDispatchToProps<dispatchPropsType, ownFunctionsType> = {
+let mapDispatchToProps: MapDispatchToProps<TDispatchProps, TOwnFunctions> = {
     logout
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (HeaderContainer);
+export default connect<TStateProps, TDispatchProps, TOwnProps, TAppState>(mapStateToProps, mapDispatchToProps) (HeaderContainer);

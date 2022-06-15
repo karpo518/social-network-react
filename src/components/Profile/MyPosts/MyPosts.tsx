@@ -8,16 +8,16 @@ import Post from "./Post/Post";
 
 let maxLength300 = maxLength(300)
 
-type PropsType = {
+type TProps = {
   posts: Array<TPost>
   sendPost: (newPostBody: string) => void
 }
 
-const MyPosts = React.memo<PropsType>((props) => {
+const MyPosts = React.memo<TProps>((props) => {
   
   let postsElements = props.posts.map(p => <Post key={p.id} id={p.id} message={p.message} likesCount={p.likesCount} /> );
 
-  let onSubmit = (formData: any) => {
+  let onSubmit = (formData: TFormData) => {
     props.sendPost(formData.newPostBody);  
   };
 
@@ -32,21 +32,21 @@ const MyPosts = React.memo<PropsType>((props) => {
   );
 });
 
-type FormDataType = {
+type TFormData = {
   newPostBody: string
 }
 
-type OwnPropsType = {
+type TOwnProps = {
   onSubmit: (FormData: any) => void
 }
 
-type FormPropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+type TFormProps = TOwnProps & InjectedFormProps<TFormData,TOwnProps>
 
-const AddPostForm: FC<FormPropsType> = (props) => {
+const AddPostForm: FC<TFormProps> = (props) => {
   return (
     <form onSubmit={props.handleSubmit} >
 
-      { createField<FormDataType>('Write your message here..', 'newPostBody', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
+      { createField<TFormData>('Write your message here..', 'newPostBody', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
 
       <div>
         <button >Add post</button>
@@ -55,6 +55,6 @@ const AddPostForm: FC<FormPropsType> = (props) => {
   )
 }
 
-const AddPostFormRedux = reduxForm<FormDataType, OwnPropsType>({ form: "ProfileAddPostForm" })(AddPostForm);
+const AddPostFormRedux = reduxForm<TFormData, TOwnProps>({ form: "ProfileAddPostForm" })(AddPostForm);
 
 export default MyPosts;

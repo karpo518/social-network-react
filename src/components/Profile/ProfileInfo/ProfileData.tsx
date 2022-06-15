@@ -3,7 +3,7 @@ import { TContacts, TProfile } from "../../../types/types"
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks"
 import s from "./ProfileInfo.module.css";
 
-type PropsType = {
+type TProps = {
     profile: TProfile
     status: string
     isOwner: boolean
@@ -11,7 +11,7 @@ type PropsType = {
     activateEditMode: () => void
   }
   
-const ProfileData: FC<PropsType> = ({profile, status, isOwner, updateStatus, activateEditMode}) => {
+const ProfileData: FC<TProps> = ({profile, status, isOwner, updateStatus, activateEditMode}) => {
   
     let availableContacts = Object.keys(profile.contacts).filter((k) => { return profile.contacts[k as keyof TContacts]  })
   
@@ -62,12 +62,12 @@ const ProfileData: FC<PropsType> = ({profile, status, isOwner, updateStatus, act
     );
   }
 
-  type ContactPropsType = {
+  type TContactProps = {
   contactTitle: string
   contactValue: string
 }
 
-const Contact: FC<ContactPropsType> = ({contactTitle, contactValue}) => {
+const Contact: FC<TContactProps> = ({contactTitle, contactValue}) => {
   return (
     <li>
       <span className={s.aboutTitle}>{contactTitle}:</span>

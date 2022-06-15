@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 import { follow, unfollow, loadUsers, usersAC } from "../../redux/users-reducer";
 import Users from "./Users";
-import { Component } from "react";
+import { Component, ComponentType } from "react";
 import { compose } from "redux";
 import { getUsers, getCurrentPage, getFollowingInProgress, getIsFetching, getPageSize, getTotalUsersCount } from "../../redux/users-selectors";
 import { TUser } from "../../types/types";
-import { AppStateType } from "../../redux/redux-store";
+import { TAppState } from "../../redux/redux-store";
 
-type MapStatePropsType = {
+type TMapStateProps = {
   users: Array<TUser>
   pageSize: number
   totalUsersCount: number
@@ -16,20 +16,20 @@ type MapStatePropsType = {
   followingInProgress: Array<number>
 }
 
-type MapDispatchPropsType = {
+type TMapDispatchProps = {
   follow: (userId: number) => void
   unfollow: (userId: number) => void
   setCurrentPage: (pageNumber: number) => void
   loadUsers: (currentPage: number, pageSize: number) => void
 }
 
-type MapOwnPropsType = {
+type TMapOwnProps = {
   pageTitle: string
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & MapOwnPropsType
+type TProps = TMapStateProps & TMapDispatchProps & TMapOwnProps
 
-class UsersContainer extends Component<PropsType> {
+class UsersContainer extends Component<TProps> {
   componentDidMount = () => {
     let {currentPage, pageSize} = this.props
 
@@ -41,7 +41,7 @@ class UsersContainer extends Component<PropsType> {
     }
   };
 
-  componentDidUpdate(prevProps: PropsType) {
+  componentDidUpdate(prevProps: TProps) {
         
     if (prevProps.currentPage !== this.props.currentPage) {
 
@@ -76,7 +76,7 @@ class UsersContainer extends Component<PropsType> {
   }
 }
 
-let mapStateToProps = (state: AppStateType): MapStatePropsType => {
+let mapStateToProps = (state: TAppState): TMapStateProps => {
   return {
       users: getUsers(state),
       pageSize: getPageSize(state),
@@ -94,6 +94,6 @@ let dispatchProps = {
     loadUsers
 }
 
-export default compose(
-  connect<MapStatePropsType, MapDispatchPropsType, MapOwnPropsType, AppStateType>(mapStateToProps, dispatchProps),
+export default compose<ComponentType<TMapOwnProps>>(
+  connect<TMapStateProps, TMapDispatchProps, TMapOwnProps, TAppState>(mapStateToProps, dispatchProps),
 )(UsersContainer)

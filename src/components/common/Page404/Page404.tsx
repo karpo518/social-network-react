@@ -1,6 +1,7 @@
+import { FC } from "react"
 import { NavLink } from "react-router-dom"
 
-const Page404 = (props) => {
+const Page404: FC<object> = (props) => {
     return (
         <div>
             <h1>Page not found</h1>

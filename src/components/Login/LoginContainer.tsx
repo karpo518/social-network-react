@@ -1,26 +1,26 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { login, updateCaptchaUrl } from "../../redux/auth-reducer";
 import { compose } from "redux";
 import Login from "./Login";
-import { AppStateType } from "../../redux/redux-store";
+import { TAppState } from "../../redux/redux-store";
 
-type MapStatePropsType = {
+type TMapStateProps = {
   isAuth: boolean,
   captchaUrl: string | null
 }
 
-type MapDispatchPropsType = {
+type TMapDispatchProps = {
   login: (formData: any) => void
   updateCaptchaUrl: () => void
 }
 
-type MapOwnPropsType = {
+type TMapOwnProps = {
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & MapOwnPropsType
+type TProps = TMapStateProps & TMapDispatchProps & TMapOwnProps
 
-class LoginContainer extends Component<PropsType> {
+class LoginContainer extends Component<TProps> {
   
   render () {
 
@@ -32,11 +32,11 @@ class LoginContainer extends Component<PropsType> {
   };
 }
 
-let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
+let mapStateToProps = (state: TAppState): TMapStateProps => ({
   isAuth: state.auth.isAuth,
   captchaUrl: state.auth.captchaUrl
 });
 
 export default compose(
-  connect<MapStatePropsType, MapDispatchPropsType, MapOwnPropsType, AppStateType>(mapStateToProps, {login,updateCaptchaUrl}),
+  connect<TMapStateProps, TMapDispatchProps, TMapOwnProps, TAppState>(mapStateToProps, {login,updateCaptchaUrl}),
 )(LoginContainer)

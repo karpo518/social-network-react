@@ -3,13 +3,13 @@ import defaultPhoto from "../../../assets/images/user.jpg";
 import { FC } from "react";
 import { TMessage } from "../../../types/types";
 
-type OtherPropsType = {
+type TOtherProps = {
   selectedId: number | null
 }
 
-type PropsType = TMessage & OtherPropsType
+type TProps = TMessage & TOtherProps
 
-const Message: FC<PropsType> = (props) => {
+const Message: FC<TProps> = (props) => {
   
   let ownershipClass = props.senderId === props.selectedId ? "incoming" : "outgoing";
   return (

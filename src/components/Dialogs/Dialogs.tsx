@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import s from "./Dialogs.module.css";
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
@@ -7,15 +7,15 @@ import { createField, InputArea } from "../common/FormControls/FormControls";
 import { required, maxLength} from "../../utils/validators/validators";
 import { TDialog, TMessage } from "../../types/types";
 
-type PropsType = {
+type TProps = {
   selectedId: number | null
   dialogs: Array<TDialog>
   messages: Array<TMessage>
   newDialog: TDialog | null
-  sendMessage: (userId: number, formData: any) => void
+  sendMessage: (userId: number, formData: TFormData) => void
 }
 
-const Dialogs: FC<PropsType> = (props) => {
+const Dialogs: FC<TProps> = (props) => {
   const onSubmit = (formData: any) => {
     if(props.selectedId !== null) { 
       props.sendMessage(props.selectedId, formData)
@@ -52,23 +52,23 @@ const Dialogs: FC<PropsType> = (props) => {
 
 let maxLength300 = maxLength(300)
 
-type FormDataType = {
+type TFormData = {
   body: string
 }
 
-type OwnPropsType = {
+type TOwnProps = {
   userId: number
   onSubmit: (formData: any) => void
 }
 
-type FormPropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+type TFormProps = TOwnProps & InjectedFormProps<TFormData,TOwnProps>
 
-const AddMessageForm: FC<FormPropsType> = (props) => {
+const AddMessageForm: FC<TFormProps> = (props) => {
 
   return (
     <form onSubmit={props.handleSubmit} className={s.form}>
       <div className="title">Send message</div>
-      { createField<FormDataType>('Write your message here..', 'body', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
+      { createField<TFormData>('Write your message here..', 'body', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
       <div>
         <button className={s.submit} >Send</button>
       </div>
@@ -76,6 +76,6 @@ const AddMessageForm: FC<FormPropsType> = (props) => {
   );
 };
 
-const AddMessageFormRedux = reduxForm<FormDataType, OwnPropsType>({ form: "DialogsAddMessageForm" })(AddMessageForm);
+const AddMessageFormRedux = reduxForm<TFormData, TOwnProps>({ form: "DialogsAddMessageForm" })(AddMessageForm);
 
 export default Dialogs;

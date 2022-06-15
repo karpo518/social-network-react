@@ -5,21 +5,21 @@ import { TContacts, TProfile } from "../../../types/types";
 import { createField, InputArea } from "../../common/FormControls/FormControls";
 import s from "./ProfileInfo.module.css";
 
-type FormDataType = TProfile
+type TFormData = TProfile
 
-type ContactsNamesType = Array<keyof TContacts & string>
+type TContactsNames = Array<keyof TContacts & string>
 
-type OwnPropsType = {
+type TOwnProps = {
   profile: TProfile
   initialValues: TProfile
   onSubmit: (formData: any) => void
 }
 
-type PropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+type TProps = TOwnProps & InjectedFormProps<TFormData,TOwnProps>
 
-export const ProfileDataForm: FC<PropsType> = (props) => {
+export const ProfileDataForm: FC<TProps> = (props) => {
 
-  let contacts  = Object.keys(props.profile.contacts) as ContactsNamesType
+  let contacts  = Object.keys(props.profile.contacts) as TContactsNames
   
   return (
     <form onSubmit={props.handleSubmit} className={`${s.form} ${s.profileDataForm}` }>
@@ -34,11 +34,11 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
       </div>
 
       <div className={s.fieldItem}>
-        { createField<FormDataType>('About me', 'aboutMe', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'About me'}) }
+        { createField<TFormData>('About me', 'aboutMe', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'About me'}) }
       </div>
 
       <div className={s.fieldItem}>
-      { createField<FormDataType>(null, 
+      { createField<TFormData>(null, 
                     'lookingForAJob', 
                     [], 
                     InputArea, 
@@ -47,7 +47,7 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
       </div>
 
       <div className={s.fieldItem}>
-        { createField<FormDataType>('Details', 'lookingForAJobDescription', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'My professional skills'}) }
+        { createField<TFormData>('Details', 'lookingForAJobDescription', [], InputArea, {type: 'text', fieldType: 'textarea', 'label': 'My professional skills'}) }
       </div>
       <div className={s.aboutItem}>
         <div className={s.aboutTitle}>Contacts: </div>
@@ -55,7 +55,7 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
           {contacts.map( (title) => {
               return (
                 <div key={title} className={s.contactFieldWrap}>
-                  {createField<FormDataType>(
+                  {createField<TFormData>(
                     title,
                     `contacts.${title}`,
                     [],
@@ -74,6 +74,6 @@ export const ProfileDataForm: FC<PropsType> = (props) => {
   );
 };
 
-const ProfileDataReduxForm = reduxForm<FormDataType,OwnPropsType>({ form: "edit-profile", enableReinitialize: true, destroyOnUnmount: false })(ProfileDataForm);
+const ProfileDataReduxForm = reduxForm<TFormData,TOwnProps>({ form: "edit-profile", enableReinitialize: true, destroyOnUnmount: false })(ProfileDataForm);
 
 export default ProfileDataReduxForm;

@@ -7,11 +7,13 @@ import SamuraiJSApp from "./App";
 
 const container = document.getElementById("root")
 
-const root = ReactDOM.createRoot(container);
+if(container) {
+  const root = ReactDOM.createRoot(container);
 
-root.render(
-    <SamuraiJSApp />
-);
+  root.render(
+      <SamuraiJSApp />
+  );
+}
 
 
 /*
@@ -22,6 +24,9 @@ store.subscribe(() => {
 
 */
 
+declare global {
+  interface Window { __store__: any; }
+}
 window.__store__ = store;
 
 // If you want to start measuring performance in your app, pass a function

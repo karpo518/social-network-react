@@ -3,7 +3,7 @@ import { TProfile } from "../../types/types";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 
-type PropsType = {
+type TProps = {
   profile: TProfile
   isOwner: boolean
   status: string
@@ -13,7 +13,7 @@ type PropsType = {
 
 }
 
-const Profile: FC<PropsType> = (props) => {
+const Profile: FC<TProps> = (props) => {
   
   return (
     <div>

@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { TUser } from "../../types/types";
+import Paginator from "../common/Paginator/Paginator";
 import Preloader from "../common/Preloader/Preloader";
-import Paginator from "./Paginator";
 import User from "./User";
 
-type PropsType = {
+type TProps = {
   currentPage: number
   totalUsersCount: number
   pageSize: number
@@ -16,7 +16,7 @@ type PropsType = {
   unfollow: (userId: number) => void
 }
 
-const Users: FC<PropsType> = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props} ) => {
+const Users: FC<TProps> = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props} ) => {
 
   return (
     <div>

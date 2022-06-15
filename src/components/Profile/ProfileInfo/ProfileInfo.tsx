@@ -7,16 +7,16 @@ import ProfileDataForm from "./ProfileDataForm";
 import { TProfile } from "../../../types/types";
 import ProfileData from "./ProfileData";
 
-type PropsType = {
-  profile: TProfile
+type TProps = {
+  profile: TProfile | null
   status: string
   isOwner: boolean
   updateStatus: (newStatus: string) => void
-  savePhoto: (file: any) => void
-  saveProfile: (newProfile: TProfile) => any 
+  savePhoto: (file: File) => void
+  saveProfile: (newProfile: TProfile) => Promise<any>
 }
 
-const ProfileInfo: FC<PropsType> = ({profile, status, updateStatus, isOwner, savePhoto, saveProfile }) => {
+const ProfileInfo: FC<TProps> = ({profile, status, updateStatus, isOwner, savePhoto, saveProfile }) => {
 
   const inputFileRef = useRef<HTMLInputElement>(null)
 
@@ -33,7 +33,7 @@ const ProfileInfo: FC<PropsType> = ({profile, status, updateStatus, isOwner, sav
   }
 
   const onMainPhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files !== null && e.target.files.length) {
+    if(e.target.files?.length) {
       savePhoto(e.target.files[0])
     }
   }
@@ -41,7 +41,7 @@ const ProfileInfo: FC<PropsType> = ({profile, status, updateStatus, isOwner, sav
     setEditMode(true)
   }
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: TProfile) => {
     saveProfile(formData).then(() => setEditMode(false) )
   };
 

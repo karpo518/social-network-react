@@ -4,14 +4,14 @@ import { NavLink } from "react-router-dom";
 import { TUser } from "../../types/types";
 import { FC } from "react";
 
-type PropsType = {
+type TProps = {
   user: TUser
   follow: (userId: number) => void
   unfollow: (userId: number) => void
   followingInProgress: Array<number>
 }
 
-const User: FC<PropsType> = ({user, follow, unfollow, followingInProgress}) => {
+const User: FC<TProps> = ({user, follow, unfollow, followingInProgress}) => {
 
   return (
     <div className={s.user} key={user.id}>

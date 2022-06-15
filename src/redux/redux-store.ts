@@ -19,12 +19,12 @@ let rootReducer = combineReducers({
 });
 
 type RootReducerType = typeof rootReducer
-export type AppStateType = ReturnType<RootReducerType>
+export type TAppState = ReturnType<RootReducerType>
 
 // Вспомогательная функция для извлечения типа из action creators
 export type InferValueTypes<T> = T extends {[key: string]: infer U} ? U : never
 
-export type TBaseThunk<TActions extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, TActions>
+export type TBaseThunk<TActions extends Action, R = Promise<any>> = ThunkAction<R, TAppState, unknown, TActions>
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -10,12 +10,12 @@ import { connect } from "react-redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
 import { useParams } from "react-router-dom";
-import { FC, useEffect } from "react";
+import { ComponentType, FC, useEffect } from "react";
 import { TDialog, TMessage } from "../../types/types";
 import { TAuthState } from "../../redux/auth-reducer";
-import { AppStateType } from "../../redux/redux-store";
+import { TAppState } from "../../redux/redux-store";
 
-type MapStatePropsType = {
+type TMapStateToProps = {
   dialogs: Array<TDialog>
   messages: Array<TMessage>
   selectedId: number | null,
@@ -23,7 +23,7 @@ type MapStatePropsType = {
   auth: TAuthState,
 }
 
-type MapDispatchPropsType = {
+type TMapDispatchToProps = {
   getDialogs: (selectedUserId: number) => void
   createNewDialog: (userId: number) => void
   resetNewDialog: () => void
@@ -32,9 +32,9 @@ type MapDispatchPropsType = {
   setSelectedDialog: (userId: number) => void
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType
+type TProps = TMapStateToProps & TMapDispatchToProps
 
-export const DialogsContainer: FC<PropsType> = (props) => {
+export const DialogsContainer: FC<TProps> = (props) => {
   
   const params = useParams();
 
@@ -71,7 +71,7 @@ export const DialogsContainer: FC<PropsType> = (props) => {
   );
 };
 
-let mapStateToProps = (state: AppStateType): MapStatePropsType => {
+let mapStateToProps = (state: TAppState): TMapStateToProps => {
   return {
     dialogs: state.dialogsPage.dialogs,
     messages: state.dialogsPage.messages,
@@ -90,7 +90,7 @@ let mapDispatchToProps = {
   setSelectedDialog: DialogsAC.setSelectedDialog
 }
 
-export default compose(
+export default compose<ComponentType>(
   withAuthRedirect,
-  connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, mapDispatchToProps),
+  connect<TMapStateToProps, TMapDispatchToProps, TProps, TAppState>(mapStateToProps, mapDispatchToProps),
 )(DialogsContainer);

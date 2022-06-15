@@ -1,12 +1,12 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import s from "./ProfileInfo.module.css";
 
-type PropsType = {
+type TProps = {
   status: string
   updateStatus: (newStatus: string ) => void
 }
 
-const ProfileStatusWithHooks: FC<PropsType> = (props) => {
+const ProfileStatusWithHooks: FC<TProps> = (props) => {
     let [editMode,setEditMode] = useState(false)
     let [status,setStatus] = useState(props.status)
 

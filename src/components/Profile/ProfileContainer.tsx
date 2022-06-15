@@ -1,5 +1,5 @@
 import Profile from "./Profile";
-import { Component } from "react";
+import { Component, ComponentType } from "react";
 import { connect } from "react-redux";
 import { getUserProfile,getStatus,updateStatus,savePhoto,saveProfile } from "../../redux/profile-reducer";
 import { useParams,useLocation,useNavigate } from "react-router-dom";
@@ -7,34 +7,36 @@ import { compose } from "redux";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { TProfile } from "../../types/types";
 import { TAuthState } from "../../redux/auth-reducer";
-import { AppStateType } from "../../redux/redux-store";
+import { TAppState } from "../../redux/redux-store";
 
-type MapStatePropsType = {
+type TMapStateProps = {
   profile: TProfile | null
   status: string
   auth: TAuthState
 }
 
-type MapDispatchPropsType = {
+type TMapDispatchProps = {
   getUserProfile: (userId: number) => any
   getStatus: (userId: number) => any
   updateStatus: (newStatus: string) => void
-  savePhoto: (file: any) => void
-  saveProfile: (newProfile: TProfile) => any 
+  savePhoto: (file: File) => void
+  saveProfile: (newProfile: TProfile) => any
 }
 
-type HOCPropsType = {
-  router: any
+type THOCProps = {
+  router: { params: { userId: string }
+            navigate: (Url: string) => Promise<any>
+          }
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & HOCPropsType
+type TProps = TMapStateProps & TMapDispatchProps & THOCProps
 
-class ProfileContainer extends Component<PropsType> {
+class ProfileContainer extends Component<TProps> {
 
   getProfileData = () => {
     let userId = null 
     if(this.props.router.params.userId) {
-      userId = this.props.router.params.userId
+      userId = parseInt(this.props.router.params.userId)
     }
 
     else if(this.props.auth.userId) {
@@ -54,7 +56,7 @@ class ProfileContainer extends Component<PropsType> {
     
     this.getProfileData()
   }
-  componentDidUpdate(prevProps: PropsType) {
+  componentDidUpdate(prevProps: TProps) {
     
     if (prevProps.router.params.userId !== this.props.router.params.userId) {
         
@@ -99,7 +101,7 @@ function withRouter(Comp: typeof Component) {
   return ComponentWithRouterProp;
 }
 
-let mapStateToProps = (state: AppStateType): MapStatePropsType => ({
+let mapStateToProps = (state: TAppState): TMapStateProps => ({
   profile: state.profilePage.profile,
   status: state.profilePage.status,
   auth: state.auth,
@@ -113,8 +115,8 @@ const MapDispatchToProps = {
   saveProfile
 }
 
-export default compose(
-  connect<MapStatePropsType,MapDispatchPropsType, HOCPropsType, AppStateType>(mapStateToProps, MapDispatchToProps),
+export default compose<ComponentType>(
+  connect<TMapStateProps,TMapDispatchProps, THOCProps, TAppState>(mapStateToProps, MapDispatchToProps),
   withRouter,
   withAuthRedirect,
 )(ProfileContainer)

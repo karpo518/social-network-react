@@ -1,20 +1,20 @@
 import { connect } from "react-redux";
 import {profileAC, sendPost } from "../../../redux/profile-reducer";
-import { AppStateType } from "../../../redux/redux-store";
+import { TAppState } from "../../../redux/redux-store";
 import { TPost } from "../../../types/types";
 import MyPosts from "./MyPosts";
 
-type MapStatePropsType = {
+type TMapStateProps = {
   posts: Array<TPost>
   newPostText: string
 }
 
-type MapDispatchPropsType = {
+type TMapDispatchProps = {
   updateNewPostText: (newPostText: string) => void
   sendPost: (formData: any) => void
 }
 
-let mapStateToProps = (state: AppStateType) => {
+let mapStateToProps = (state: TAppState) => {
   return {
     posts: state.profilePage.posts,
     newPostText: state.profilePage.newPostText
@@ -26,6 +26,6 @@ let MapDispatchToProps = {
   sendPost
 }
 
-const MyPostsContainer = connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType> (mapStateToProps, MapDispatchToProps) (MyPosts);
+const MyPostsContainer = connect<TMapStateProps, TMapDispatchProps, {}, TAppState> (mapStateToProps, MapDispatchToProps) (MyPosts);
 
 export default MyPostsContainer;

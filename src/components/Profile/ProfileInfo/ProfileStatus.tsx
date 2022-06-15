@@ -1,18 +1,18 @@
 import React, { ChangeEvent } from "react";
 import s from "./ProfileInfo.module.css";
 
-type PropsType = {
+type TProps = {
     status: string
     updateStatus: (newStatus: string ) => void
 }
 
-type StateType = {
+type TLocalState = {
     editMode: boolean
     status: string
 }
 
 
-class  ProfileStatus extends React.Component<PropsType, StateType> {
+class  ProfileStatus extends React.Component<TProps, TLocalState> {
 
     state = {
         editMode: false,
@@ -24,7 +24,7 @@ class  ProfileStatus extends React.Component<PropsType, StateType> {
         // this.getUserStatus(this.props.profile.userId);
     };
 
-    componentDidUpdate(prevProps: PropsType) {
+    componentDidUpdate(prevProps: TProps) {
     
         if(prevProps.status !== this.props.status) {
             this.setState({status: this.props.status})

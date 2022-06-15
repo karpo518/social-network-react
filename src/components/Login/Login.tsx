@@ -4,15 +4,15 @@ import { required } from "../../utils/validators/validators";
 import { createField, InputArea } from "../common/FormControls/FormControls";
 import s from "./Login.module.css";
 
-type PropsType = {
+type TProps = {
   isAuth: boolean
   captchaUrl: string | null
   login: (formData: any) => void
   updateCaptchaUrl: () => void
 }
 
-const Login: FC<PropsType> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
-  const onSubmit = (formData: FormDataType) => {
+const Login: FC<TProps> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
+  const onSubmit = (formData: TFormData) => {
     login(formData);
   };
 
@@ -28,7 +28,7 @@ const Login: FC<PropsType> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => 
   );
 };
 
-export type FormDataType = {
+export type TFormData = {
   email: string
   password: string
   rememberMe: boolean
@@ -36,21 +36,21 @@ export type FormDataType = {
   captcha?: string
 }
 
-type OwnPropsType = {
+type TOwnProps = {
   captchaUrl: string | null
   updateCaptchaUrl: () => void
   onSubmit: (formData: any) => void
 }
 
-type FormPropsType = OwnPropsType & InjectedFormProps<FormDataType,OwnPropsType>
+type TFormProps = TOwnProps & InjectedFormProps<TFormData,TOwnProps>
 
-const LoginForm: FC<FormPropsType> = (props) => {
+const LoginForm: FC<TFormProps> = (props) => {
     return (
     <form onSubmit={props.handleSubmit} className={s.form}>
 
-      { createField<FormDataType>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
-      { createField<FormDataType>('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
-      { createField<FormDataType>('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+      { createField<TFormData>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+      { createField<TFormData>('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
+      { createField<TFormData>('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
 
       { 
         props.captchaUrl && 
@@ -59,13 +59,13 @@ const LoginForm: FC<FormPropsType> = (props) => {
                 <img onClick={props.updateCaptchaUrl} src={props.captchaUrl} alt={'captcha text'} />
             </div>
             <div className={s.fieldControl} >
-                { createField<FormDataType>('Image text', 'captcha', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+                { createField<TFormData>('Image text', 'captcha', [required], InputArea, {type: 'text', fieldType: 'input'}) }
             </div>
         </div> )
       }
       <div>
 
-        { createField<FormDataType>(null, 'rememberMe', [], InputArea, {type: 'checkbox', fieldType: 'input', label: 'Remember me', 'id': 'rememberMe' }) }
+        { createField<TFormData>(null, 'rememberMe', [], InputArea, {type: 'checkbox', fieldType: 'input', label: 'Remember me', 'id': 'rememberMe' }) }
 
       </div>
       {props.error && <div className={s.errors} > {props.error}</div>}
@@ -76,6 +76,6 @@ const LoginForm: FC<FormPropsType> = (props) => {
   );
 };
 
-const LoginReduxForm = reduxForm<FormDataType,OwnPropsType>({ form: "login" })(LoginForm);
+const LoginReduxForm = reduxForm<TFormData,TOwnProps>({ form: "login" })(LoginForm);
 
 export default Login;

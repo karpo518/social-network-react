@@ -5,7 +5,7 @@ import { updateAPIKey } from "../api/api";
 import { profileAPI } from "../api/profile-api";
 import { authAPI } from "../api/auth-api";
 import { InferValueTypes, TBaseThunk } from "./redux-store";
-import { FormDataType } from '../components/Login/Login';
+import { TFormData } from '../components/Login/Login';
 
 const authAT = {
   SET_USER_DATA: "MY-APP/AUTH/SET-USER-DATA" as const,
@@ -114,7 +114,7 @@ export const getAuthUserData = (): TBaseThunk<TAuthActions> => {
   };
 };
 
-export const login = (formData: FormDataType): TBaseThunk<TAuthActions> => {
+export const login = (formData: TFormData): TBaseThunk<TAuthActions> => {
   return async (dispatch) => {
     let email: string = formData.email, 
         password: string = formData.password, 

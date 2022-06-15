@@ -1,8 +1,3 @@
-
-
-// Тип для подстановки в качестве типа значений из другого типа-объекта 
-export type TValueOf<T> = T[keyof T]
-
 // Специальный тип, который проверяет, равно ли значение ключу или строке вида `ключ.значение` из типа ObjectType 
 export type NestedKeyOf<ObjectType extends object> = {
 [Key in keyof ObjectType & string ]: ObjectType[Key] extends object 

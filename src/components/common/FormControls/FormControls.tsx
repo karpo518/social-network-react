@@ -1,6 +1,6 @@
 import { Component, FC } from 'react';
-import { CommonFieldProps, Field, WrappedFieldInputProps, WrappedFieldMetaProps } from "redux-form";
-import { NestedKeyOf, TValueOf } from '../../../types/types';
+import { Field, WrappedFieldInputProps, WrappedFieldMetaProps } from "redux-form";
+import { NestedKeyOf } from '../../../types/types';
 import { FieldValidatorType } from "../../../utils/validators/validators";
 import s from "./FormControls.module.css";
 
@@ -15,10 +15,6 @@ type PropsType = {
 
 export const InputArea: FC<PropsType> = ({ input, meta: {touched, error}, fieldType, ...props }) => {
   const hasError = touched && error;
-  console.log('input var:')
-  console.log(input)
-  console.log('props var:')
-  console.log(props)
   return (
     <div className={s.formControl + " " + (hasError ? s.error : "")}>
       {props.label && props.type !== "checkbox" && (

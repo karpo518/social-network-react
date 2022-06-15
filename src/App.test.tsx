@@ -1,8 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
 
-import React from "react";
 import SamuraiJSApp from './App';
 
 test('renders Menu text', async () => {
