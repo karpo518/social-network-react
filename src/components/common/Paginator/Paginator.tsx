@@ -45,8 +45,8 @@ const Paginator: FC<Props> = ({totalItemsCount, pageSize, currentPage, onPageCha
     } 
   }
 
-  return (
-
+  return (pagesCount < 2) ? <></>  
+    :(
     <div className={s.pagination}>
         { portionNumber > 1 && 
           <>
@@ -75,7 +75,7 @@ const Paginator: FC<Props> = ({totalItemsCount, pageSize, currentPage, onPageCha
         }
 
     </div>
-  );
+  )
 };
 
 export default Paginator;

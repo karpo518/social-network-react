@@ -1,0 +1,17 @@
+.inputsBlock {
+    margin-bottom: 20px;
+}
+
+.inputItem {
+    margin: 10px 0px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.inputItem .term {
+    padding: 5px;
+    width: 200px;
+    margin-top: 5px;
+}

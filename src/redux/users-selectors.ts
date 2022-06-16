@@ -28,3 +28,11 @@ export const getIsFetching = (state: TAppState) => {
 export const getFollowingInProgress = (state: TAppState) => {
     return  state.usersPage.followingInProgress;
 }
+
+export const getIsFriend = (state: TAppState) => {
+    return  state.usersPage.isFriend;
+}
+
+export const getTerm = (state: TAppState) => {
+    return  state.usersPage.term;
+}

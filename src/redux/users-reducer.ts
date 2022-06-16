@@ -14,7 +14,17 @@ const usersAT =
     SET_TOTAL_USERS_COUNT: 'MY-APP/USERS/SET_TOTAL_USERS_COUNT' as const,
     TOGGLE_IS_FETCHING: 'MY-APP/USERS/TOGGLE_IS_FETCHING' as const,
     TOGGLE_IS_FOLLOWING_IN_PROGRESS: 'MY-APP/USERS/TOGGLE_IS_FOLLOWING_IN_PROGRESS' as const,
+    SET_IS_FRIEND: 'MY-APP/USERS/SET_IS_FRIEND' as const,
+    SET_TERM: 'MY-APP/USERS/SET_TERM' as const,
 }
+
+export const friendsOnly = {
+    Yes: true,
+    No: false,
+    Any: null
+}
+
+type TFriendsOnly = InferValueTypes<typeof friendsOnly>
 
 let initialState = {
     users: [] as Array<TUser>,
@@ -23,6 +33,9 @@ let initialState = {
     currentPage: 1,
     isFetching: true,
     followingInProgress: [] as Array<number>, // Array of user ids
+    isFriend: 0 as 0 | 1 | 2,
+    term: null as string | null,
+    
 };
 
 type TUsersState = typeof initialState
@@ -62,6 +75,12 @@ const usersReducer = (state: TUsersState = initialState, action: TUsersActions):
                         ? [...state.followingInProgress, action.userId] 
                         : state.followingInProgress.filter(id => id !== action.userId) };
         }
+        case usersAT.SET_IS_FRIEND: {
+            return {...state, isFriend: action.isFriend };
+        }
+        case usersAT.SET_TERM: {
+            return {...state, term: action.term };
+        }
         default:
             return {...state};
 
@@ -79,16 +98,21 @@ export const usersAC = {
     setCurrentPage: (currentPage: number) => ({ type: usersAT.SET_CURRENT_PAGE, currentPage: currentPage }),
     setTotalUsersCount: (totalUsersCount: number) => ({ type: usersAT.SET_TOTAL_USERS_COUNT, totalUsersCount: totalUsersCount }),
     toggleIsFetching: (isFetching: boolean) => ({ type: usersAT.TOGGLE_IS_FETCHING, isFetching: isFetching }),
-    toggleIsFollowingInProgress: (isFetching: boolean, userId: number) => ({ type: usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS, isFetching, userId })
+    toggleIsFollowingInProgress: (isFetching: boolean, userId: number) => ({ type: usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS, isFetching, userId }),
+    setIsFriend: (isFriend: 0 | 1 | 2) => ({ type: usersAT.SET_IS_FRIEND, isFriend }),
+    setTerm: (term: string | null) => ({ type: usersAT.SET_TERM, term })
 }
 
 type DispatchType = Dispatch<TUsersActions>
 
-export const loadUsers = (currentPage: number, pageSize: number): TBaseThunk<TUsersActions> => {
+export const loadUsers = (currentPage: number, 
+                          pageSize: number,
+                          isFriend: 0 | 1 | 2,
+                          term: string | null): TBaseThunk<TUsersActions> => {
     return async (dispatch) => {
 
         dispatch(usersAC.toggleIsFetching(true));
-        let response = await usersAPI.getUsers(currentPage, pageSize) 
+        let response = await usersAPI.getUsers(currentPage, pageSize, isFriend, term) 
         dispatch(usersAC.toggleIsFetching(false));
         dispatch(usersAC.setUsers(response.data.items));
         dispatch(usersAC.setTotalUsersCount(response.data.totalCount));
