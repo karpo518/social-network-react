@@ -1,16 +1,19 @@
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { TFriend } from "../../types/types";
+import { TUser } from "../../types/types";
 import Friend from "./Friend/Friend";
 import s from "./Navbar.module.css";
 
-type PropsType = {
-  friends: Array<TFriend>
+type TProps = {
+  friends: Array<TUser>
 }
 
-const Navbar: FC<PropsType> = (props) => {
+const Navbar: FC<TProps> = (props) => {
+  
+  console.log(props)
+  
   let friendsData = props.friends.map((f) => (
-    <Friend id={f.id} image={f.image} name={f.name} key={f.id} />
+    <Friend id={f.id} image={f.photos.small} name={f.name} key={f.id} />
   ));
 
   return (

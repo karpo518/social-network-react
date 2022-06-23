@@ -1,4 +1,4 @@
-import React from "react";
+import "./wdyr"; // <-- first import
 import * as ReactDOM from 'react-dom/client'
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
@@ -9,6 +9,8 @@ const container = document.getElementById("root")
 
 if(container) {
   const root = ReactDOM.createRoot(container);
+
+  (SamuraiJSApp as any).whyDidYouRender = true;
 
   root.render(
       <SamuraiJSApp />

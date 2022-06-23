@@ -29,6 +29,11 @@
   display: block;
   margin: 0px;
   padding: 0px;
+
+  display: grid;
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
 }
 
 .friends ul li {
@@ -40,9 +45,9 @@
 }
 
 .friends .image img {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
 }
 
 .nav .title {
@@ -63,4 +68,10 @@
 .nav .friends a {
 
     font-size: 12px;
+    display: block;
+    font-weight: bold;
+}
+
+.nav .friends .name {
+  margin-top: 5px;
 }

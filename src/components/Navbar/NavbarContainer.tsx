@@ -1,16 +1,37 @@
+import { FC, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { TAppState } from '../../redux/redux-store';
-import { TFriend } from '../../types/types';
+import { loadFriends} from '../../redux/sidebar-reducer';
+import { TUser } from '../../types/types';
 import Navbar from './Navbar';
 
-type MapStatePropsType = {
-  friends: Array<TFriend>
+type TProps = TMapStateProps & TMapDispatchProps
+
+const NavbarContainer: FC<TProps> = (props) => {
+
+  const loadFriends = props.loadFriends
+  
+  useEffect(() => {
+    loadFriends()
+  }, [loadFriends]);
+
+  return <Navbar friends={props.friends} />
 }
 
-let mapStateToProps = (state: TAppState):MapStatePropsType => {
+type TMapStateProps = {
+  friends: Array<TUser>
+}
+
+type TMapDispatchProps = {
+  loadFriends: () => void
+}
+
+let mapStateToProps = (state: TAppState):TMapStateProps => {
   return { friends: state.sidebar.friends };
 };
 
-const NavbarContainer = connect<MapStatePropsType, {}, {}, TAppState>(mapStateToProps, {}) (Navbar);
+let mapDispatchToProps = {
+  loadFriends: loadFriends,
+}
 
-export default NavbarContainer;
+export default connect<TMapStateProps, TMapDispatchProps, {}, TAppState>(mapStateToProps, mapDispatchToProps) (NavbarContainer);

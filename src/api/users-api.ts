@@ -1,3 +1,4 @@
+import { friendsOnly } from "../redux/users-reducer";
 import { TUser } from "../types/types"
 import { TGetItems, instance, TResponse } from "./api"
 
@@ -8,8 +9,8 @@ export const usersAPI = {
         if(term) {
             request += `&term=${term}`;
         }
-        if(isFriend !== 0) {
-            request += `&friend=` + (isFriend === 1 ? 'true' : 'false') 
+        if(isFriend !== friendsOnly.Any) {
+            request += `&friend=` + (isFriend === friendsOnly.Yes ? 'true' : 'false') 
         }
         console.log(`GET: users?page=${currentPage}&count=${pageSize}`)
         return instance.get<TGetItems<TUser>>(request)

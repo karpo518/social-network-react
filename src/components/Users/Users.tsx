@@ -13,12 +13,12 @@ type TProps = {
   isFetching: boolean
   followingInProgress: Array<number>
   isFriend: 0 | 1 | 2
-  term: string | null
+  term: string
   onPageChanged: (pageNumber: number) => void
   follow: (userId: number) => void
   unfollow: (userId: number) => void
   setIsFriend: (isFriend: 0 | 1 | 2) => void
-  setTerm: (term: string | null) => void
+  setTerm: (term: string) => void
 }
 
 const Users: FC<TProps> = ({currentPage, onPageChanged, totalUsersCount, pageSize, ...props} ) => {
@@ -57,4 +57,5 @@ const Users: FC<TProps> = ({currentPage, onPageChanged, totalUsersCount, pageSiz
   );
 };
 
+(Users as any).whyDidYouRender = true
 export default Users;

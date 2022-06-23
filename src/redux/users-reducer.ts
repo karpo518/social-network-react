@@ -19,12 +19,12 @@ const usersAT =
 }
 
 export const friendsOnly = {
-    Yes: true,
-    No: false,
-    Any: null
+    Yes: 1 as const,
+    No: 2 as const,
+    Any: 0 as const
 }
 
-type TFriendsOnly = InferValueTypes<typeof friendsOnly>
+export type TIsFriend = 0 | 1 | 2
 
 let initialState = {
     users: [] as Array<TUser>,
@@ -33,8 +33,8 @@ let initialState = {
     currentPage: 1,
     isFetching: true,
     followingInProgress: [] as Array<number>, // Array of user ids
-    isFriend: 0 as 0 | 1 | 2,
-    term: null as string | null,
+    isFriend: 0 as TIsFriend,
+    term: '' as string,
     
 };
 
@@ -100,15 +100,15 @@ export const usersAC = {
     toggleIsFetching: (isFetching: boolean) => ({ type: usersAT.TOGGLE_IS_FETCHING, isFetching: isFetching }),
     toggleIsFollowingInProgress: (isFetching: boolean, userId: number) => ({ type: usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS, isFetching, userId }),
     setIsFriend: (isFriend: 0 | 1 | 2) => ({ type: usersAT.SET_IS_FRIEND, isFriend }),
-    setTerm: (term: string | null) => ({ type: usersAT.SET_TERM, term })
+    setTerm: (term: string) => ({ type: usersAT.SET_TERM, term })
 }
 
 type DispatchType = Dispatch<TUsersActions>
 
 export const loadUsers = (currentPage: number, 
                           pageSize: number,
-                          isFriend: 0 | 1 | 2,
-                          term: string | null): TBaseThunk<TUsersActions> => {
+                          isFriend: 0|1|2 = 0,
+                          term: string | null = null): TBaseThunk<TUsersActions> => {
     return async (dispatch) => {
 
         dispatch(usersAC.toggleIsFetching(true));

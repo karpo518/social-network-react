@@ -49,7 +49,7 @@ export type TFriend =
 {
     id: number
     name: string
-    image: string
+    image: string | null
 }
 
 export type TMessage = {

@@ -1,25 +1,29 @@
 import { ChangeEvent, FC } from "react";
 import s from "./Users.module.css";
+import throttle from "lodash.throttle"
 
 type TIsFriend = 0 | 1 | 2
 
 type TProps = {
   currentPage: number
   isFriend: TIsFriend
-  term: null | string
-  setTerm: (term: string | null) => void
+  term: string
+  setTerm: (term: string) => void
   setIsFriend: (isFriend: TIsFriend) => void
   onPageChanged: (newPage: number) => void
 }
 
 const  FilterUsersForm: FC<TProps> = (props) => {
   
+    const tSetTerm = throttle(props.setTerm, 1000, {leading: false})
+
     const onTermChange = (e: ChangeEvent<HTMLInputElement>): void => {
-      let term = e.target.value || null
+      let term = e.target.value || ''
       if(props.currentPage !== 1) {
         props.onPageChanged(1)
       }
-      props.setTerm(term)
+
+      tSetTerm(term)
     }
 
     const onIsFriendChange = (e: ChangeEvent<HTMLInputElement>): void => {

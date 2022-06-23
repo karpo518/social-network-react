@@ -1,11 +1,12 @@
 import { connect } from "react-redux";
-import { follow, unfollow, loadUsers, usersAC } from "../../redux/users-reducer";
+import { follow, unfollow, loadUsers, usersAC, TIsFriend } from "../../redux/users-reducer";
 import Users from "./Users";
-import { Component, ComponentType } from "react";
+import { ComponentType, FC, useEffect } from "react";
 import { compose } from "redux";
 import { getUsers, getCurrentPage, getFollowingInProgress, getIsFetching, getPageSize, getTotalUsersCount, getIsFriend, getTerm } from "../../redux/users-selectors";
 import { TUser } from "../../types/types";
 import { TAppState } from "../../redux/redux-store";
+import usePrevious from "../../utils/hooks/usePrevious";
 
 type TMapStateProps = {
   users: Array<TUser>
@@ -15,7 +16,7 @@ type TMapStateProps = {
   isFetching: boolean
   followingInProgress: Array<number>
   isFriend: 0 | 1 | 2
-  term: string | null
+  term: string
 }
 
 type TMapDispatchProps = {
@@ -24,67 +25,61 @@ type TMapDispatchProps = {
   setCurrentPage: (pageNumber: number) => void
   loadUsers: (currentPage: number, pageSize: number, isFriend: 0 | 1 | 2, term: string | null) => void
   setIsFriend: (isFriend: 0 | 1 | 2) => void
-  setTerm: (term: string | null) => void
+  setTerm: (term: string) => void
 }
 
 type TMapOwnProps = {
   pageTitle: string
 }
 
+
 type TProps = TMapStateProps & TMapDispatchProps & TMapOwnProps
 
-class UsersContainer extends Component<TProps> {
-  componentDidMount = () => {
-    let {currentPage, pageSize, isFriend, term} = this.props
+const UsersContainer:FC<TProps> = (props) => {
 
-    if(currentPage !== 1) {
-      this.props.setCurrentPage(1)
-    }
-    else {
-      this.props.loadUsers(currentPage, pageSize, isFriend, term)
-    }
-  };
+  const {currentPage, pageSize, isFriend, term, loadUsers, setCurrentPage} = props
 
-  componentDidUpdate(prevProps: TProps) {
-        
-    if (prevProps.currentPage !== this.props.currentPage ||
-        prevProps.isFriend !== this.props.isFriend ||
-        prevProps.term !== this.props.term
-      ) {
+  const prevIsFriend = usePrevious<TIsFriend>(props.isFriend) || props.isFriend
+  const prevTerm = usePrevious<string>(props.term) || props.term
 
-      this.props.loadUsers(this.props.currentPage, this.props.pageSize, this.props.isFriend, this.props.term);
-    }
-  }
-
-  onPageChanged = (pageNumber: number) => {
-        
-      this.props.setCurrentPage(pageNumber);
-  }
-
-  render() {
-
+  const page = (prevIsFriend !== isFriend || prevTerm !== term) ? 1 : currentPage
     
-    return (
+  useEffect(() => {
+
+    if(currentPage !== page) {
+      setCurrentPage(1)
+    }
+
+    loadUsers(currentPage, pageSize, isFriend, term)
+
+  },[currentPage, pageSize, isFriend, term, loadUsers, page, setCurrentPage])
+
+
+  const onPageChanged = (pageNumber: number) => {
+        
+      props.setCurrentPage(pageNumber);
+  }
+
+  return (
       <>
-        <h2>{this.props.pageTitle}</h2>
+        <h2>{props.pageTitle}</h2>
         <Users
-          totalUsersCount={this.props.totalUsersCount}
-          pageSize={this.props.pageSize}
-          currentPage={this.props.currentPage}
-          onPageChanged={this.onPageChanged}
-          follow={this.props.follow}
-          unfollow={this.props.unfollow}
-          isFetching={this.props.isFetching}
-          followingInProgress={this.props.followingInProgress}
-          setIsFriend={this.props.setIsFriend}
-          setTerm={this.props.setTerm}
-          users={this.props.users}
-          isFriend={this.props.isFriend}
-          term={this.props.term}
+          totalUsersCount={props.totalUsersCount}
+          pageSize={props.pageSize}
+          currentPage={props.currentPage}
+          onPageChanged={onPageChanged}
+          follow={props.follow}
+          unfollow={props.unfollow}
+          isFetching={props.isFetching}
+          followingInProgress={props.followingInProgress}
+          setIsFriend={props.setIsFriend}
+          setTerm={props.setTerm}
+          users={props.users}
+          isFriend={props.isFriend}
+          term={props.term}
         />
       </>
     );
-  }
 }
 
 let mapStateToProps = (state: TAppState): TMapStateProps => {
@@ -104,7 +99,7 @@ let dispatchProps = {
     follow,
     unfollow,
     setCurrentPage: usersAC.setCurrentPage,
-    loadUsers,
+    loadUsers: loadUsers,
     setIsFriend: usersAC.setIsFriend,
     setTerm: usersAC.setTerm,
 }
