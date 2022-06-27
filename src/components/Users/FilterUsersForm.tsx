@@ -1,8 +1,7 @@
 import { ChangeEvent, FC } from "react";
 import s from "./Users.module.css";
 import throttle from "lodash.throttle"
-
-type TIsFriend = 0 | 1 | 2
+import { friendsOnly, TIsFriend } from "../../redux/users-reducer";
 
 type TProps = {
   currentPage: number
@@ -27,8 +26,8 @@ const  FilterUsersForm: FC<TProps> = (props) => {
     }
 
     const onIsFriendChange = (e: ChangeEvent<HTMLInputElement>): void => {
-      let isFriend = parseInt(e.target.value)
-      if(isFriend === 0 || isFriend === 1 || isFriend === 2) {
+      let isFriend = e.target.value
+      if (friendsOnly.Yes === isFriend || friendsOnly.No === isFriend || friendsOnly.Any === isFriend) { 
         if(props.currentPage !== 1) {
           props.onPageChanged(1)
         }
@@ -47,11 +46,11 @@ const  FilterUsersForm: FC<TProps> = (props) => {
         </div>
         <div className={s.inputItem}>
           <div className={s.label} >Кого показывать?</div>
-          <input type="radio" id="isFriendAny" name="isFriend" value={0} defaultChecked={props.isFriend === 0} onChange={onIsFriendChange} />
+          <input type="radio" id="isFriendAny" name="isFriend" value={friendsOnly.Any} defaultChecked={props.isFriend === friendsOnly.Any} onChange={onIsFriendChange} />
           <label htmlFor="isFriendAny">Всех</label>
-          <input type="radio" id="isFriendYes" name="isFriend" value={1} defaultChecked={props.isFriend === 1} onChange={onIsFriendChange} />
+          <input type="radio" id="isFriendYes" name="isFriend" value={friendsOnly.Yes} defaultChecked={props.isFriend === friendsOnly.Yes} onChange={onIsFriendChange} />
           <label htmlFor="isFriendYes">Друзей</label>
-          <input type="radio" id="isFriendNo" name="isFriend" value={2} defaultChecked={props.isFriend === 2} onChange={onIsFriendChange} />
+          <input type="radio" id="isFriendNo" name="isFriend" value={friendsOnly.No} defaultChecked={props.isFriend === friendsOnly.No} onChange={onIsFriendChange} />
           <label htmlFor="isFriendYes">Всех, кроме друзей</label>
         </div>
       </div>

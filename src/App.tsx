@@ -18,11 +18,11 @@ import PopupMessage from "./components/common/PopupMessage/PopupMessage";
 // lazy components
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer') )
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer') )
-const UsersContainer = React.lazy(() => import('./components/Users/UsersContainer') )
+const UsersPage = React.lazy(() => import('./components/Users/UsersPage').then(module => ({ default: module.UsersPage })))
 const News = React.lazy(() => import('./components/News/News') )
 const Music = React.lazy(() => import('./components/Music/Music') )
 const Settings = React.lazy(() => import('./components/Settings/Settings') )
-const LoginContainer = React.lazy(() => import('./components/Login/LoginContainer') )
+const LoginPage = React.lazy( () => import('./components/Login/LoginPage').then(module => ({ default: module.LoginPage })))
 
 type TMapStateToProps = {
   initialized: boolean
@@ -87,11 +87,11 @@ const App: FC<TProps> = (props) => {
                 <Route path="/dialogs/:userId" element={<DialogsContainer />} />
                 <Route path="/profile/" element={<ProfileContainer />} />
                 <Route path="/profile/:userId" element={<ProfileContainer />} />
-                <Route path="/users" element={<UsersContainer pageTitle={'User list'} />} />
+                <Route path="/users" element={<UsersPage />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/music" element={<Music />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/login" element={<LoginContainer />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="*" element={<Page404 />} />
               </Routes>
             </Suspense>

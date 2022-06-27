@@ -5,7 +5,7 @@ import { updateAPIKey } from "../api/api";
 import { profileAPI } from "../api/profile-api";
 import { authAPI } from "../api/auth-api";
 import { InferValueTypes, TBaseThunk } from "./redux-store";
-import { TFormData } from '../components/Login/Login';
+import { TFormData } from '../components/Login/LoginPage';
 
 const authAT = {
   SET_USER_DATA: "MY-APP/AUTH/SET-USER-DATA" as const,

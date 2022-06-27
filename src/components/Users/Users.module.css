@@ -2,16 +2,30 @@
     margin-bottom: 20px;
 }
 
-.inputItem {
+.fieldItem {
     margin: 10px 0px;
+    display: inline-block;
 }
 
-.label {
+.fieldItem.fileItemIsFriend
+{
+    margin-right: 20px;
+}
+
+.fieldItem label {
     font-weight: bold;
+    display: block;
 }
 
-.inputItem .term {
+.fieldItem .term {
     padding: 5px;
     width: 200px;
     margin-top: 5px;
 }
+
+.fieldItem .isFriend {
+    padding: 5px;
+    width: 200px;
+    margin-top: 5px;
+}
+

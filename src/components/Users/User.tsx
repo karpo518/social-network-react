@@ -3,15 +3,18 @@ import defaultPhoto from "../../assets/images/user.jpg";
 import { NavLink } from "react-router-dom";
 import { TUser } from "../../types/types";
 import { FC } from "react";
+import { useSelector } from "react-redux";
+import { getFollowingInProgress } from "../../redux/users-selectors";
 
 type TProps = {
   user: TUser
-  follow: (userId: number) => void
-  unfollow: (userId: number) => void
-  followingInProgress: Array<number>
+  onFollow: (userId: number) => void
+  onUnfollow: (userId: number) => void
 }
 
-const User: FC<TProps> = ({user, follow, unfollow, followingInProgress}) => {
+const User: FC<TProps> = ({user, onFollow, onUnfollow}) => {
+
+  const followingInProgress = useSelector(getFollowingInProgress)
 
   return (
     <div className={s.user} key={user.id}>
@@ -27,7 +30,7 @@ const User: FC<TProps> = ({user, follow, unfollow, followingInProgress}) => {
           {user.followed ? (
             <button
               onClick={() => {
-                unfollow(user.id);
+                onUnfollow(user.id);
               }}
               className={`${s.btn} ${s.btnFollow}`}
               disabled={followingInProgress.some((id: number) => id === user.id)}
@@ -37,7 +40,7 @@ const User: FC<TProps> = ({user, follow, unfollow, followingInProgress}) => {
           ) : (
             <button
               onClick={() => {
-                follow(user.id);
+                onFollow(user.id);
               }}
               className={`${s.btn} ${s.btnUnfollow}`}
               disabled={followingInProgress.some((id) => id === user.id)}

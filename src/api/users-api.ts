@@ -1,10 +1,10 @@
-import { friendsOnly } from "../redux/users-reducer";
+import { friendsOnly, TIsFriend } from "../redux/users-reducer";
 import { TUser } from "../types/types"
 import { TGetItems, instance, TResponse } from "./api"
 
 export const usersAPI = {
     
-    getUsers(currentPage = 1, pageSize = 10, isFriend = 0 as 0 | 1 | 2, term = null as null | string ) {
+    getUsers(currentPage = 1, pageSize = 10, isFriend = friendsOnly.Any as TIsFriend, term = null as null | string ) {
         let request =`users?page=${currentPage}&count=${pageSize}`
         if(term) {
             request += `&term=${term}`;

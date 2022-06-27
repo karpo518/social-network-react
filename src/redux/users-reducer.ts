@@ -1,11 +1,13 @@
 import { InferValueTypes, TBaseThunk } from './redux-store';
-import { TUser } from './../types/types';
+import { TUser, TValueOf } from './../types/types';
 import { usersAPI } from "../api/users-api";
 import { updateObjectInArray } from "../utils/object-helpers";
 import { Dispatch } from 'redux';
+import { TResponse } from '../api/api';
+import { AxiosResponse } from 'axios';
 
 // action types of usersReduser
-const usersAT =
+export const usersAT =
 {
     FOLLOW: 'MY-APP/USERS/FOLLOW' as const,
     UNFOLLOW: 'MY-APP/USERS/UNFOLLOW' as const,
@@ -14,31 +16,37 @@ const usersAT =
     SET_TOTAL_USERS_COUNT: 'MY-APP/USERS/SET_TOTAL_USERS_COUNT' as const,
     TOGGLE_IS_FETCHING: 'MY-APP/USERS/TOGGLE_IS_FETCHING' as const,
     TOGGLE_IS_FOLLOWING_IN_PROGRESS: 'MY-APP/USERS/TOGGLE_IS_FOLLOWING_IN_PROGRESS' as const,
-    SET_IS_FRIEND: 'MY-APP/USERS/SET_IS_FRIEND' as const,
-    SET_TERM: 'MY-APP/USERS/SET_TERM' as const,
+    SET_FILTER: 'MY-APP/USERS/SET_FILTER' as const,
 }
 
 export const friendsOnly = {
-    Yes: 1 as const,
-    No: 2 as const,
-    Any: 0 as const
+    Yes: 'yes' as const,
+    No: 'no' as const,
+    Any: 'any' as const
 }
 
-export type TIsFriend = 0 | 1 | 2
+export type TIsFriend =  TValueOf<typeof friendsOnly>
+
+export type TFilter = {
+    isFriend: TIsFriend,
+    term: string
+}
 
 let initialState = {
     users: [] as Array<TUser>,
     pageSize: 100,
     totalUsersCount: 0,
     currentPage: 1,
-    isFetching: true,
+    isFetching: false,
     followingInProgress: [] as Array<number>, // Array of user ids
-    isFriend: 0 as TIsFriend,
-    term: '' as string,
+    filter: {
+        isFriend: friendsOnly.Any,
+        term: '',
+    } as TFilter
     
 };
 
-type TUsersState = typeof initialState
+export type TUsersState = typeof initialState
 
 const usersReducer = (state: TUsersState = initialState, action: TUsersActions): TUsersState => {
     
@@ -71,16 +79,14 @@ const usersReducer = (state: TUsersState = initialState, action: TUsersActions):
         case usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS: {
             
             return {...state, 
-                    followingInProgress: action.isFetching 
+                    followingInProgress: action.isFollowingInProgress 
                         ? [...state.followingInProgress, action.userId] 
                         : state.followingInProgress.filter(id => id !== action.userId) };
         }
-        case usersAT.SET_IS_FRIEND: {
-            return {...state, isFriend: action.isFriend };
+        case usersAT.SET_FILTER: {
+            return {...state, filter: action.payload };
         }
-        case usersAT.SET_TERM: {
-            return {...state, term: action.term };
-        }
+
         default:
             return {...state};
 
@@ -98,20 +104,22 @@ export const usersAC = {
     setCurrentPage: (currentPage: number) => ({ type: usersAT.SET_CURRENT_PAGE, currentPage: currentPage }),
     setTotalUsersCount: (totalUsersCount: number) => ({ type: usersAT.SET_TOTAL_USERS_COUNT, totalUsersCount: totalUsersCount }),
     toggleIsFetching: (isFetching: boolean) => ({ type: usersAT.TOGGLE_IS_FETCHING, isFetching: isFetching }),
-    toggleIsFollowingInProgress: (isFetching: boolean, userId: number) => ({ type: usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS, isFetching, userId }),
-    setIsFriend: (isFriend: 0 | 1 | 2) => ({ type: usersAT.SET_IS_FRIEND, isFriend }),
-    setTerm: (term: string) => ({ type: usersAT.SET_TERM, term })
+    toggleIsFollowingInProgress: (isFollowingInProgress: boolean, userId: number) => 
+        ({ type: usersAT.TOGGLE_IS_FOLLOWING_IN_PROGRESS, isFollowingInProgress, userId }),
+    setFilter: (payload: TFilter) => ({ type: usersAT.SET_FILTER, payload }),
 }
 
 type DispatchType = Dispatch<TUsersActions>
 
 export const loadUsers = (currentPage: number, 
                           pageSize: number,
-                          isFriend: 0|1|2 = 0,
-                          term: string | null = null): TBaseThunk<TUsersActions> => {
+                          isFriend: TIsFriend = friendsOnly.Any,
+                          term: string = ''): TBaseThunk<TUsersActions> => {
     return async (dispatch) => {
 
         dispatch(usersAC.toggleIsFetching(true));
+        // dispatch(usersAC.setCurrentPage(currentPage));
+        // dispatch(usersAC.setFilter({term: term, isFriend: isFriend}));
         let response = await usersAPI.getUsers(currentPage, pageSize, isFriend, term) 
         dispatch(usersAC.toggleIsFetching(false));
         dispatch(usersAC.setUsers(response.data.items));
@@ -122,7 +130,7 @@ export const loadUsers = (currentPage: number,
 
 const _followUnfollowFlow = async (dispatch: DispatchType, 
                                    userId: number, 
-                                   apiMethod: any, 
+                                   apiMethod: (userId: number) => Promise<AxiosResponse<TResponse>>, 
                                    successAC: (userId: number) => ReturnType<typeof usersAC.followSuccess | typeof usersAC.unfollowSuccess>) => {
 
     dispatch(usersAC.toggleIsFollowingInProgress(true, userId));
@@ -136,14 +144,14 @@ const _followUnfollowFlow = async (dispatch: DispatchType,
 export const follow = (userId: number): TBaseThunk<TUsersActions> => {
     return async (dispatch: any) => {
 
-        _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), usersAC.followSuccess)
+      _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), usersAC.followSuccess)
     }
 }
 
 export const unfollow = (userId: number): TBaseThunk<TUsersActions> => {
     return async (dispatch: any) => {
 
-        _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), usersAC.unfollowSuccess)
+       _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), usersAC.unfollowSuccess)
     }
 }
 

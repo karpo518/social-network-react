@@ -29,10 +29,6 @@ export const getFollowingInProgress = (state: TAppState) => {
     return  state.usersPage.followingInProgress;
 }
 
-export const getIsFriend = (state: TAppState) => {
-    return  state.usersPage.isFriend;
-}
-
-export const getTerm = (state: TAppState) => {
-    return  state.usersPage.term;
+export const getFilter = (state: TAppState) => {
+    return  state.usersPage.filter;
 }

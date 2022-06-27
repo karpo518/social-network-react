@@ -5,6 +5,9 @@ export type NestedKeyOf<ObjectType extends object> = {
 : `${Key}`
 }[keyof ObjectType & string];
 
+export type TValueOf<ObjectType extends object> = 
+{[Key in keyof ObjectType & string]: ObjectType[Key]}[keyof ObjectType & string];
+
 export type TPost = {
     id: number
     message: string

@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import s from "./ProfileInfo.module.css";
 
-type TProps = {
+export type TProps = {
   status: string
   updateStatus: (newStatus: string ) => void
 }

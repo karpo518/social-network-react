@@ -1,19 +1,27 @@
 import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { InjectedFormProps, reduxForm } from "redux-form";
+import { ThunkDispatch } from "redux-thunk";
+import { login, TAuthActions, updateCaptchaUrl } from "../../redux/auth-reducer";
+import { TAppState } from "../../redux/redux-store";
 import { required } from "../../utils/validators/validators";
 import { createField, InputArea } from "../common/FormControls/FormControls";
 import s from "./Login.module.css";
 
-type TProps = {
-  isAuth: boolean
-  captchaUrl: string | null
-  login: (formData: any) => void
-  updateCaptchaUrl: () => void
-}
 
-const Login: FC<TProps> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
+export const LoginPage: FC = () => {
+  
+  const captchaUrl = useSelector((state: TAppState) => state.auth.captchaUrl)
+  const isAuth = useSelector((state: TAppState) => state.auth.isAuth)
+
+  const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TAuthActions>>()
+
+  const onUpdateCaptchaUrl = () => {
+    dispatch(updateCaptchaUrl)
+  }
+
   const onSubmit = (formData: TFormData) => {
-    login(formData);
+    dispatch(login(formData))
   };
 
   return (
@@ -22,7 +30,7 @@ const Login: FC<TProps> = ({isAuth, captchaUrl, login, updateCaptchaUrl}) => {
       {isAuth ? (
         <div>You are logged in already!</div>
       ) : (
-        <LoginReduxForm captchaUrl={captchaUrl} updateCaptchaUrl={updateCaptchaUrl} onSubmit={onSubmit} />
+        <LoginReduxForm captchaUrl={captchaUrl} onUpdateCaptchaUrl={onUpdateCaptchaUrl} onSubmit={onSubmit} />
       )}
     </div>
   );
@@ -38,14 +46,15 @@ export type TFormData = {
 
 type TOwnProps = {
   captchaUrl: string | null
-  updateCaptchaUrl: () => void
+  onUpdateCaptchaUrl: () => void
   onSubmit: (formData: any) => void
 }
 
 type TFormProps = TOwnProps & InjectedFormProps<TFormData,TOwnProps>
 
 const LoginForm: FC<TFormProps> = (props) => {
-    return (
+    
+  return (
     <form onSubmit={props.handleSubmit} className={s.form}>
 
       { createField<TFormData>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
@@ -56,7 +65,7 @@ const LoginForm: FC<TFormProps> = (props) => {
         props.captchaUrl && 
         ( <div>
             <div className={s.fieldContent}>
-                <img onClick={props.updateCaptchaUrl} src={props.captchaUrl} alt={'captcha text'} />
+                <img onClick={props.onUpdateCaptchaUrl} src={props.captchaUrl} alt={'captcha text'} />
             </div>
             <div className={s.fieldControl} >
                 { createField<TFormData>('Image text', 'captcha', [required], InputArea, {type: 'text', fieldType: 'input'}) }
@@ -77,5 +86,3 @@ const LoginForm: FC<TFormProps> = (props) => {
 };
 
 const LoginReduxForm = reduxForm<TFormData,TOwnProps>({ form: "login" })(LoginForm);
-
-export default Login;
