@@ -7,11 +7,10 @@ type TProps = {
     profile: TProfile
     status: string
     isOwner: boolean
-    updateStatus: (newStatus: string) => void
-    activateEditMode: () => void
+    activateProfileEditMode: () => void
   }
   
-const ProfileData: FC<TProps> = ({profile, status, isOwner, updateStatus, activateEditMode}) => {
+const ProfileData: FC<TProps> = ({profile, status, isOwner, activateProfileEditMode}) => {
   
     let availableContacts = Object.keys(profile.contacts).filter((k) => { return profile.contacts[k as keyof TContacts]  })
   
@@ -19,14 +18,14 @@ const ProfileData: FC<TProps> = ({profile, status, isOwner, updateStatus, activa
       <div className={s.description}>
         {isOwner && (
           <div className={s.editDataWrap}>
-            <button onClick={activateEditMode}>Edit</button>
+            <button onClick={activateProfileEditMode}>Edit</button>
           </div>
         )}
         <div className={s.aboutItem}>
           <div className={s.fullName}>{profile.fullName}</div>
         </div>
         <div className={s.aboutItem}>
-          <ProfileStatusWithHooks status={status} updateStatus={updateStatus} />
+          <ProfileStatusWithHooks status={status} />
         </div>
         <div className={s.aboutItem}>
           <span className={s.aboutTitle}>About me: </span>

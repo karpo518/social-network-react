@@ -14,7 +14,7 @@ export const profileAPI = {
         console.log(`GET: profile/${userId}`)
         return instance.get<TProfile>(`profile/${userId}`)
     },
-    getStatus(userId: number) {
+    getUserStatus(userId: number) {
         console.log(`GET: profile/status/${userId}`)
         return instance.get<string>(`profile/status/${userId}`)
     },

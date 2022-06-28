@@ -17,7 +17,7 @@ import PopupMessage from "./components/common/PopupMessage/PopupMessage";
 
 // lazy components
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer') )
-const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer') )
+const ProfilePage = React.lazy(() => import('./components/Profile/ProfilePage').then(module => ({ default: module.ProfilePage })))
 const UsersPage = React.lazy(() => import('./components/Users/UsersPage').then(module => ({ default: module.UsersPage })))
 const News = React.lazy(() => import('./components/News/News') )
 const Music = React.lazy(() => import('./components/Music/Music') )
@@ -85,8 +85,8 @@ const App: FC<TProps> = (props) => {
                 <Route path="/" element={<Navigate to={'/profile'} /> } />
                 <Route path="/dialogs/" element={<DialogsContainer />} />
                 <Route path="/dialogs/:userId" element={<DialogsContainer />} />
-                <Route path="/profile/" element={<ProfileContainer />} />
-                <Route path="/profile/:userId" element={<ProfileContainer />} />
+                <Route path="/profile/" element={<ProfilePage />} />
+                <Route path="/profile/:userId" element={<ProfilePage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/music" element={<Music />} />

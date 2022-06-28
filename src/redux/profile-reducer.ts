@@ -101,9 +101,9 @@ export const getUserProfile = (userId: number): TBaseThunk<TProfileActions> => {
     }
 }
 
-export const getStatus = (userId: number): TBaseThunk<TProfileActions> => {
+export const getUserStatus = (userId: number): TBaseThunk<TProfileActions> => {
     return async (dispatch) => {
-        let response = await profileAPI.getStatus(userId)
+        let response = await profileAPI.getUserStatus(userId)
         dispatch(profileAC.setStatus(response.data));
     }
 }

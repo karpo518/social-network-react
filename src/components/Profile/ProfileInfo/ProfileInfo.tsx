@@ -1,22 +1,27 @@
-import Preloader from "../../common/Preloader/Preloader";
-import defaultPhoto from "../../../assets/images/user.jpg";
-import s from "./ProfileInfo.module.css";
-import { NavLink } from "react-router-dom";
 import { ChangeEvent, FC, useRef, useState } from "react";
-import ProfileDataForm from "./ProfileDataForm";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
+import defaultPhoto from "../../../assets/images/user.jpg";
+import { savePhoto, saveProfile, TProfileActions } from "../../../redux/profile-reducer";
+import { sGetStatus } from "../../../redux/profile-selectors";
+import { TAppState } from "../../../redux/redux-store";
 import { TProfile } from "../../../types/types";
+import Preloader from "../../common/Preloader/Preloader";
 import ProfileData from "./ProfileData";
+import ProfileDataForm from "./ProfileDataForm";
+import s from "./ProfileInfo.module.css";
 
 type TProps = {
   profile: TProfile | null
-  status: string
   isOwner: boolean
-  updateStatus: (newStatus: string) => void
-  savePhoto: (file: File) => void
-  saveProfile: (newProfile: TProfile) => Promise<any>
 }
 
-const ProfileInfo: FC<TProps> = ({profile, status, updateStatus, isOwner, savePhoto, saveProfile }) => {
+const ProfileInfo: FC<TProps> = ({profile, isOwner }) => {
+
+  const status  = useSelector(sGetStatus)
+
+  const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TProfileActions>>();
 
   const inputFileRef = useRef<HTMLInputElement>(null)
 
@@ -34,16 +39,17 @@ const ProfileInfo: FC<TProps> = ({profile, status, updateStatus, isOwner, savePh
 
   const onMainPhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
     if(e.target.files?.length) {
-      savePhoto(e.target.files[0])
+      dispatch(savePhoto(e.target.files[0]))
     }
   }
-  const activateEditMode = () => {
+  const activateProfileEditMode = () => {
     setEditMode(true)
   }
 
   const onSubmit = (formData: TProfile) => {
-    saveProfile(formData).then(() => setEditMode(false) )
+    dispatch(saveProfile(formData)).then(() => setEditMode(false) )
   };
+
 
   return (
     <div>
@@ -73,11 +79,9 @@ const ProfileInfo: FC<TProps> = ({profile, status, updateStatus, isOwner, savePh
                                onSubmit={onSubmit} />
             : <ProfileData profile={profile} 
                            status={status} 
-                           isOwner={isOwner} 
-                           updateStatus={updateStatus} 
-                           activateEditMode={activateEditMode}  />
+                           isOwner={isOwner}
+                           activateProfileEditMode={activateProfileEditMode} />
         }
-
 
       </div>
     </div>

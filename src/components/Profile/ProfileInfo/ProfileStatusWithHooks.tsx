@@ -1,14 +1,19 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { TProfileActions, updateStatus } from "../../../redux/profile-reducer";
+import { TAppState } from "../../../redux/redux-store";
 import s from "./ProfileInfo.module.css";
 
 export type TProps = {
   status: string
-  updateStatus: (newStatus: string ) => void
 }
 
 const ProfileStatusWithHooks: FC<TProps> = (props) => {
     let [editMode,setEditMode] = useState(false)
     let [status,setStatus] = useState(props.status)
+    
+    const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TProfileActions>>();
 
     useEffect(() => {
         setStatus(props.status)
@@ -20,7 +25,7 @@ const ProfileStatusWithHooks: FC<TProps> = (props) => {
 
     const deactivateMode = () => {
         setEditMode(false)
-        props.updateStatus(status)
+        dispatch(updateStatus(status))
     }
 
     const onStatusChange = (e: ChangeEvent<HTMLInputElement>) => {

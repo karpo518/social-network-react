@@ -5,7 +5,7 @@ describe("ProfileStatusWithHooks component", () => {
     test("status from props should be in the state", () => {
       
         let mockCallback = jest.fn()
-        let component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  updateStatus={mockCallback} />)
+        let component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  />)
         let tree = component.toTree();
         expect(tree?.props.status).toBe("it-kamasutra.com");
 
@@ -14,7 +14,7 @@ describe("ProfileStatusWithHooks component", () => {
     test("after creation span should be displayed", () => {
 
           const mockCallback = jest.fn() 
-          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  updateStatus={mockCallback} />)
+          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  />)
           const root = component.root
           expect(() => { root.findByType('input') }).toThrow()
 
@@ -23,7 +23,7 @@ describe("ProfileStatusWithHooks component", () => {
       test("after creation span should be equal status", () => {
 
           const mockCallback = jest.fn()
-          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  updateStatus={mockCallback} />)
+          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  />)
           const root = component.root
           let span = root.findByType('span')
           expect(span.children[0]).toBe('it-kamasutra.com');
@@ -32,7 +32,7 @@ describe("ProfileStatusWithHooks component", () => {
       test("input should be displayed in editMode", () => {
         
           const mockCallback = jest.fn()
-          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"  updateStatus={mockCallback} />)
+          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com"   />)
           const root = component.root
           let span = root.findByType('span')
           act(() =>{ span.props.onDoubleClick() })
@@ -45,7 +45,7 @@ describe("ProfileStatusWithHooks component", () => {
        
           const mockCallback = jest.fn()
         
-          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com" updateStatus={mockCallback} />)
+          const component = create(<ProfileStatusWithHooks status="it-kamasutra.com" />)
         
           const root = component.root
 
