@@ -1,16 +1,21 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { TAppState } from "../../redux/redux-store";
-import { follow, loadUsers, TFilter, TUsersActions, unfollow, usersAC } from "../../redux/users-reducer";
+import { follow, friendsOnly, loadUsers, TFilter, TIsFriend, TUsersActions, unfollow, usersAC } from "../../redux/users-reducer";
 import { getCurrentPage, getFilter, getIsFetching, getPageSize, getTotalUsersCount, getUsers } from "../../redux/users-selectors";
-import { TUser } from "../../types/types";
+import { TFriend, TUser } from "../../types/types";
+import { useNavigateSearch } from "../../utils/hooks/useNavigateSearch";
 import usePrevious from "../../utils/hooks/usePrevious";
 import Paginator from "../common/Paginator/Paginator";
 import Preloader from "../common/Preloader/Preloader";
 import FilterUsersFormik from "./FilterUsersFormik";
 import User from "./User";
 
+export type TFilterParams = {isFriend?: TIsFriend, 
+  term?: string,
+  page?: string}
 
 export const UsersPage: FC = () => {
 
@@ -22,6 +27,12 @@ export const UsersPage: FC = () => {
   const filter = useSelector(getFilter)
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TUsersActions>>();
+
+  const navigateSearch = useNavigateSearch()
+
+  const [searchParams] = useSearchParams()
+
+  const params = Object.fromEntries(searchParams.entries()) as TFilterParams
 
   const onPageChanged = (pageNumber: number) => {    
     // props.setCurrentPage(pageNumber);
@@ -43,19 +54,66 @@ export const UsersPage: FC = () => {
   const prevFilter = usePrevious<TFilter>(filter) || filter
 
   const page = (prevFilter !== filter) ? 1 : currentPage
-    
+  
+  let [filterInited, setFilterInited] = useState<boolean>(false)
+
   useEffect(() => {
-    
-    if(currentPage !== page) {
-      dispatch(usersAC.setCurrentPage(1))
+  
+    if(filterInited) {
+      let filterParams: TFilterParams = {}
+
+      if(filter.isFriend !== friendsOnly.Any) {
+        filterParams.isFriend = filter.isFriend
+      }
+
+      if(filter.term !== '') {
+        filterParams.term = filter.term
+      }
+
+      if(page !== 1) {
+        filterParams.page = page.toString()
+      }
+      
+      navigateSearch('/users', filterParams)
+    }
+    else {
+
+      if(params.page) {
+        
+        dispatch(usersAC.setCurrentPage(Number(params.page)))
+      }
+      
+      if(params.isFriend || params.term) {
+        
+        let actualFilter: TFilter = filter
+
+        actualFilter.isFriend = params.isFriend || filter.isFriend
+        
+        actualFilter.term = params.term || filter.term
+        
+        dispatch(usersAC.setFilter(actualFilter))
+      }
+
+      setFilterInited(true)
     }
 
-    dispatch(loadUsers(currentPage, 
-                       pageSize, 
-                       filter.isFriend, 
-                       filter.term))
+  },[filter, page, filterInited])
 
-  },[currentPage, pageSize, page, filter, dispatch])
+  useEffect(() => {
+    
+    if(filterInited) {
+      if(currentPage !== page) {
+        dispatch(usersAC.setCurrentPage(page))
+      }
+
+      dispatch(loadUsers(currentPage, 
+                        pageSize, 
+                        filter.isFriend, 
+                        filter.term))
+    }
+    
+
+  },[currentPage, pageSize, page, filter, dispatch, filterInited])
 
 
   return (
