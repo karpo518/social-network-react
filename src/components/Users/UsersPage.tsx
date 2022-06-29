@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { TAppState } from "../../redux/redux-store";
 import { follow, friendsOnly, loadUsers, TFilter, TIsFriend, TUsersActions, unfollow, usersAC } from "../../redux/users-reducer";
 import { getCurrentPage, getFilter, getIsFetching, getPageSize, getTotalUsersCount, getUsers } from "../../redux/users-selectors";
-import { TFriend, TUser } from "../../types/types";
+import { TUser } from "../../types/types";
 import { useNavigateSearch } from "../../utils/hooks/useNavigateSearch";
 import usePrevious from "../../utils/hooks/usePrevious";
 import Paginator from "../common/Paginator/Paginator";
@@ -28,9 +28,9 @@ export const UsersPage: FC = () => {
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TUsersActions>>();
 
-  const navigateSearch = useNavigateSearch()
-
   const [searchParams] = useSearchParams()
+
+  const navigateSearch = useNavigateSearch()
 
   const params = Object.fromEntries(searchParams.entries()) as TFilterParams
 
@@ -97,7 +97,7 @@ export const UsersPage: FC = () => {
       setFilterInited(true)
     }
 
-  },[filter, page, filterInited])
+  },[filter, page, filterInited, dispatch, params, navigateSearch])
 
   useEffect(() => {
     
