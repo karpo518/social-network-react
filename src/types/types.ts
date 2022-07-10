@@ -81,5 +81,6 @@ export type TDialog = {
     lastUserActivityDate: string,
     newMessagesCount: number
     photos: {small: string | null, large: string | null}
+    selectedId?: number | null 
 }
 

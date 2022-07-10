@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { FC } from "react";
 import { Field, InjectedFormProps } from "redux-form";
 import { reduxForm } from "redux-form";
@@ -24,7 +25,7 @@ export const ProfileDataForm: FC<TProps> = (props) => {
   return (
     <form onSubmit={props.handleSubmit} className={`${s.form} ${s.profileDataForm}` }>
       <div className={s.saveDataWrap}>
-        <button>Save</button>
+        <Button type="primary" htmlType="submit" >Save</Button>
       </div>
 
       {props.error && <div className={s.errors} > {props.error}</div>}

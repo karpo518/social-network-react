@@ -1,3 +1,4 @@
+/*
 html {height: 100%;}
 body {
   margin: 0;
@@ -8,6 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   position: relative;
+  font-size: 16px;
 }
 
 code {
@@ -17,6 +19,8 @@ code {
 
 #root { height: 100%; }
 
+*/
+
 #root > .preloader {
 
   text-align: center;
@@ -24,4 +28,20 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+html body {
+  font-size: 16px;
+}
+
+#root .submitBlock {
+  margin-top: 10px; 
+}
+
+#root .ant-checkbox {
+  display: inline-block;
+}
+
+#root .ant-checkbox-wrapper:last-child {
+  margin-left: 5px;
 }

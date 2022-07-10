@@ -7,8 +7,8 @@ const Post: FC<TPost> = (props) => {
 
   return (
     <div className={s.item}>
-      <img src={userPhoto} alt={'author img'} />
-      {props.message}
+      <div className={s.imgWrap} ><img src={userPhoto} alt={'author img'} /></div>
+      <div className={s.messageBody}>{props.message}</div>
       <div>
         <span className={s.likesCount} >{props.likesCount} like(s)</span>
       </div>

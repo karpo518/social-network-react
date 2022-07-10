@@ -1,11 +1,15 @@
-import { FC } from "react";
-import s from "./Dialogs.module.css";
-import DialogItem from "./DialogItem/DialogItem";
-import Message from "./Message/Message";
+import { Button, Col, Row, Switch } from "antd";
+import cn from "classnames";
+import { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { InjectedFormProps, reduxForm } from "redux-form";
-import { createField, InputArea } from "../common/FormControls/FormControls";
-import { required, maxLength} from "../../utils/validators/validators";
+import { sGetSelectedUsername } from "../../redux/dialogs-selectors";
 import { TDialog, TMessage } from "../../types/types";
+import { maxLength, required } from "../../utils/validators/validators";
+import { createField, InputArea } from "../common/FormControls/FormControls";
+import DialogItem from "./DialogItem/DialogItem";
+import s from "./Dialogs.module.css";
+import Message from "./Message/Message";
 
 type TProps = {
   selectedId: number | null
@@ -15,37 +19,66 @@ type TProps = {
   sendMessage: (userId: number, formData: TFormData) => void
 }
 
-const Dialogs: FC<TProps> = (props) => {
+const Dialogs: FC<TProps> = ({selectedId, dialogs, messages, newDialog, sendMessage}) => {
+
+  let [selectDialogMode, setSelectDialogMode] = useState(!selectedId)
+
   const onSubmit = (formData: any) => {
-    if(props.selectedId !== null) { 
-      props.sendMessage(props.selectedId, formData)
+    if(selectedId !== null) { 
+      sendMessage(selectedId, formData)
     }
   }
 
-  let allDialogs = props.newDialog === null ? props.dialogs : [props.newDialog, ...props.dialogs]
+  useEffect(() =>{ 
+    // Если selectedId изменился и при этом не равен null, значит выбран какой-то диалог.
+    // В этом случае нужно свернуть список диалогов на мобильных
+    if(selectedId) {
+      setSelectDialogMode(false)
+    }
+  }, [selectedId])
+
+
+  let allDialogs = newDialog === null ? dialogs : [newDialog, ...dialogs]
 
   let dialogsElements = allDialogs.map((d: TDialog) => {
-        return <DialogItem key={d.id} {...d} />
+        return <DialogItem key={d.id} selectedId={selectedId} {...d} />
     }
   )
 
-  let messagesElements = props.messages.map((m: TMessage) => {
+  let messagesElements = messages.map((m: TMessage) => {
       return (
-        <Message {...m} selectedId={props.selectedId} />
+        <Message {...m} selectedId={selectedId} />
       )
   })
 
+  const selectedUsername = useSelector(sGetSelectedUsername)
+
   return (
     <div className={s.dialogs}>
-      <div className={s.dialogItems}>{dialogsElements}</div>
-      {
-        props.selectedId 
-          ? <div className={s.messages}>
-              <div className={s.list}>{messagesElements}</div>
-              <AddMessageFormRedux onSubmit={onSubmit} userId={props.selectedId} />
-            </div>
-          : <div className={s.selectDialog} >Please, select dialog!</div>
-      }
+      <h1>Сообщения</h1>
+      <Row>
+        <Col span={24} md={6} >
+          <div className={s.dialogListHead} >
+            Показать все диалоги <Switch checked={selectDialogMode} onChange={setSelectDialogMode} />
+
+            {!selectDialogMode && <div className={s.mobileTitle} >Диалог с <span className={s.username}>{selectedUsername}</span></div>}
+
+          </div>
+          <div className={cn(s.dialogItems, {[s.selectDialogMode]: selectDialogMode === true }) } >
+            {dialogsElements}
+          </div>
+        </Col>
+        <Col span={24}  md={18} >
+          {
+            selectedId 
+              ? <div className={s.messages}>
+                  <div className={s.list}>{messagesElements}</div>
+                  <AddMessageFormRedux onSubmit={onSubmit} userId={selectedId} />
+                </div>
+              : <div className={s.selectDialog} >Please, select dialog!</div>
+          }
+        </Col>
+      </Row>
     </div>
   );
 };
@@ -69,8 +102,8 @@ const AddMessageForm: FC<TFormProps> = (props) => {
     <form onSubmit={props.handleSubmit} className={s.form}>
       <div className="title">Send message</div>
       { createField<TFormData>('Write your message here..', 'body', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
-      <div>
-        <button className={s.submit} >Send</button>
+      <div className="submitBlock">
+        <Button type="primary" htmlType="submit" >Send</Button>
       </div>
     </form>
   );

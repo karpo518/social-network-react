@@ -6,7 +6,6 @@ import { getUserProfile, getUserStatus, TProfileActions } from "../../redux/prof
 import { sGetProfile } from "../../redux/profile-selectors";
 import { TAppState } from "../../redux/redux-store";
 import { useRequireAuth } from "../../utils/hooks/useRequireAuth";
-import MyPostsContainer from "./MyPosts/MyPostsContainer";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 
 export const ProfilePage:FC  = () =>  {
@@ -16,8 +15,9 @@ export const ProfilePage:FC  = () =>  {
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TProfileActions>>();
 
-  const navigate = useNavigate();
   const params = useParams();
+
+  const navigate = useNavigate();
 
   let userId = null as number | null 
   if(params.userId) {
@@ -25,9 +25,6 @@ export const ProfilePage:FC  = () =>  {
   }
   else if(auth.userId) {
     userId = auth.userId
-  }
-  else {
-    navigate('/login')
   }
 
   const getProfileData = useCallback( (userId: number) => {
@@ -39,7 +36,10 @@ export const ProfilePage:FC  = () =>  {
     if(userId) {
       getProfileData(userId)
     }
-  },[userId, getProfileData])
+    else {
+      navigate('/login')
+    }
+  },[userId, getProfileData, navigate])
   
 
     return (
@@ -49,10 +49,10 @@ export const ProfilePage:FC  = () =>  {
           ? <div>
               <ProfileInfo isOwner={!params.userId} 
                            profile={profile} />
-              <MyPostsContainer />
             </div>
           : <div>Нет данных для отображения</div>
       }
+
       </>
     );
 }

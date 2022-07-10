@@ -2,9 +2,9 @@ import { TAppState } from './redux-store';
 import { createSelector } from 'reselect'
 
 export const getFriendsSelector = (state: TAppState) => {
-    return  state.usersPage.users;
+    return  state.sidebar.friends;
 }
 
-export const getFriends = createSelector([getFriendsSelector], (users) => {
-    return  users.filter(u => u.photos.small !== null);
+export const getFriends = createSelector([getFriendsSelector], (friends) => {
+    return  friends.filter(u => u.photos.small !== null);
 })

@@ -1,20 +1,28 @@
-
-.header {
-  grid-area: h;
-  background-color: #ff0000bf;
-  margin: 5px 5px 0px 5px;
-}
-.header .logo {
-  /* width: 20px; */
+.logo {
   height: 100%;
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  float: left;
+  display: inline-block;
 }
 
-.header .logo img {
-    height: 40px;
+@media (max-width: 479px) {
+  .logo {
+    display: none;
+  }
+}
+
+
+.toggleDrawer {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+@media (min-width: 992px) {
+  .toggleDrawer {
+    display: none;
+  }
+}
+
+.logo img {
+  height: 40px;
 }
 
 .loginBlock {
@@ -46,6 +54,11 @@
     vertical-align: middle;
 }
 
+.visibleMenu {
+  line-height: 100%;
+}
+
+
 .hiddenMenu {
   display: none;
   top: 100%;
@@ -56,6 +69,16 @@
   z-index: 1000;
 }
 
+.hiddenMenu ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.hiddenMenu ul li {
+  text-align: center;
+}
+
 .hiddenMenu ul li span {
   
     cursor: pointer;
@@ -63,4 +86,12 @@
 
 .loginBlock:hover .hiddenMenu {
   display: block;
+}
+
+.mobileMenu {
+  height: 100%;
+}
+
+.loginName {
+  margin-left: 5px;
 }

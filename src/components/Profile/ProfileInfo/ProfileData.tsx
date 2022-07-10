@@ -2,6 +2,7 @@ import { FC } from "react"
 import { TContacts, TProfile } from "../../../types/types"
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks"
 import s from "./ProfileInfo.module.css";
+import { Button } from "antd";
 
 type TProps = {
     profile: TProfile
@@ -18,7 +19,7 @@ const ProfileData: FC<TProps> = ({profile, status, isOwner, activateProfileEditM
       <div className={s.description}>
         {isOwner && (
           <div className={s.editDataWrap}>
-            <button onClick={activateProfileEditMode}>Edit</button>
+            <Button type="primary" onClick={activateProfileEditMode}>Edit</Button>
           </div>
         )}
         <div className={s.aboutItem}>

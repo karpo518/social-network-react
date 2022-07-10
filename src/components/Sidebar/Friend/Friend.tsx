@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { TFriend } from "../../../types/types";
-import s from "./../Navbar.module.css";
+import s from "./../Sidebar.module.css";
 
 type TProps = TFriend
 

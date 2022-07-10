@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import React, { FC } from "react";
 import { InjectedFormProps, reduxForm } from "redux-form";
 import { TPost } from "../../../types/types";
@@ -48,8 +49,8 @@ const AddPostForm: FC<TFormProps> = (props) => {
 
       { createField<TFormData>('Write your message here..', 'newPostBody', [required, maxLength300], InputArea, {fieldType: 'textarea'}) }
 
-      <div>
-        <button >Add post</button>
+      <div className="submitBlock">
+        <Button type="primary" htmlType="submit" >Add post</Button>
       </div>
     </form>
   )

@@ -1,4 +1,51 @@
 .nav {
+  border-right: 1px solid #f0f0f0;
+}
+
+.nav .sidebarMenu {
+  border-right: none;
+}
+
+.nav .title {
+  margin-left: 20px;
+  color: #f2242e;
+}
+
+.nav .friends {
+  margin-top: 20px;
+}
+
+.friends ul {
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+
+  display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.friends ul li {
+  display: inline-block;
+  font-size: 14px;
+}
+
+.friends .image {
+  display: inline-block;
+}
+
+.friends .image img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+}
+
+/*
+.nav {
     grid-area: n;
     padding: 20px;
     background-color: #ff0000bf;
@@ -75,3 +122,5 @@
 .nav .friends .name {
   margin-top: 5px;
 }
+
+*/

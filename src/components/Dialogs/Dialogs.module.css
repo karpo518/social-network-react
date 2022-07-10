@@ -1,12 +1,13 @@
 .dialogs {
+/*    
     display: grid;
     grid-template-columns: 3fr 10fr;
     position: relative;
+*/
 }
 
 .dialogItems {
     padding: 10px;
-
 }
 
 .selectDialog {
@@ -16,8 +17,43 @@
 }
 
 .dialogItems .dialog {
-
     margin: 10px 0px;
+    display: none;
+}
+
+.dialogItems.selectDialogMode .dialog {
+    display: block;
+}
+
+.mobileTitle {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.mobileTitle .username {
+    color: #f2242e;
+}
+
+@media (min-width: 768px) {
+    .dialogItems .dialog, .dialogItems .dialog.active {
+        display: block;
+    }
+
+    .dialogListHead {
+        display: none;
+    }
+
+    .mobileTitle {
+        display: none;
+    }
+}
+
+.dialogItems .dialog.active {
+    background-color: #fff4f6;
+}
+
+.dialogItems .dialog.active .name a {
+    color: black;
 }
 
 .messages {
@@ -33,29 +69,12 @@
     gap: 20px;
 }
 
-.messages .message.incoming {
-
-}
-
-
-.messages .message .author {
-    /* align-self: start; */
-}
-
 .messages .message .body {
-
-    /* align-self: end; */
     padding-top: 20px;
 }
 
 .messages .message.outgoing {
     flex-direction: row-reverse;
-}
-
-
-
-.messages .message.outgoing .author{
-    
 }
 
 .messages .message .image {

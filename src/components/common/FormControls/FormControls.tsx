@@ -1,3 +1,5 @@
+import { Checkbox, Input } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import { Component, FC } from 'react';
 import { Field, WrappedFieldInputProps, WrappedFieldMetaProps } from "redux-form";
 import { NestedKeyOf } from '../../../types/types';
@@ -24,17 +26,14 @@ export const InputArea: FC<PropsType> = ({ input, meta: {touched, error}, fieldT
       )}
       
       <div className={s.fieldWrap}>
-        {fieldType === "input" ? (
-          <input {...input} {...props} />
-        ) : (
-          <textarea {...input} {...props} />
+        {fieldType === "input" 
+         ? props.type === "checkbox" 
+              ? <Checkbox  {...input} {...props} >{props.label}</Checkbox> 
+              : <Input {...input} {...props} />
+         : (
+          <TextArea {...input} {...props} />
         )}
       </div>
-      {props.label && props.type === "checkbox" && (
-        <div className={s.labelCheckboxWrap}>
-          <label htmlFor={props.id || ""}>{props.label}</label>
-        </div>
-      )}
 
       {hasError ? (
         <div className={s.errorText}>

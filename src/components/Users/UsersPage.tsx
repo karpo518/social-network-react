@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { Pagination, Row } from "antd";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
@@ -8,7 +9,6 @@ import { getCurrentPage, getFilter, getIsFetching, getPageSize, getTotalUsersCou
 import { TUser } from "../../types/types";
 import { useNavigateSearch } from "../../utils/hooks/useNavigateSearch";
 import usePrevious from "../../utils/hooks/usePrevious";
-import Paginator from "../common/Paginator/Paginator";
 import Preloader from "../common/Preloader/Preloader";
 import FilterUsersFormik from "./FilterUsersFormik";
 import User from "./User";
@@ -28,14 +28,16 @@ export const UsersPage: FC = () => {
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TUsersActions>>();
 
-  const [searchParams] = useSearchParams()
-
   const navigateSearch = useNavigateSearch()
 
-  const params = Object.fromEntries(searchParams.entries()) as TFilterParams
 
-  const onPageChanged = (pageNumber: number) => {    
-    // props.setCurrentPage(pageNumber);
+  const [searchParams] = useSearchParams()
+
+  const params = useMemo(() => {
+    return Object.fromEntries(searchParams.entries()) as TFilterParams
+  }, [searchParams]); 
+
+  const onPageChanged = (pageNumber: number, ) => {    
     dispatch(usersAC.setCurrentPage(pageNumber))
   }
 
@@ -59,6 +61,8 @@ export const UsersPage: FC = () => {
 
   useEffect(() => {
   
+    console.log('run useEffect')
+    
     if(filterInited) {
       let filterParams: TFilterParams = {}
 
@@ -97,7 +101,7 @@ export const UsersPage: FC = () => {
       setFilterInited(true)
     }
 
-  },[filter, page, filterInited, dispatch, params, navigateSearch])
+  },[filter, page, filterInited, dispatch, params, navigateSearch ])
 
   useEffect(() => {
     
@@ -121,23 +125,33 @@ export const UsersPage: FC = () => {
       <h2>Users</h2>
 
       <FilterUsersFormik onFilterChanged={onFilterChanged} />
-
-      <Paginator totalItemsCount={totalUsersCount} pageSize={pageSize}  onPageChanged={onPageChanged} currentPage={currentPage} />
+      <Pagination
+        defaultCurrent={1}
+        total={totalUsersCount}
+        defaultPageSize={pageSize}
+        current={currentPage}
+        onChange={onPageChanged}
+        showSizeChanger={false}
+        responsive={true}
+      />
+      {/*       <Paginator totalItemsCount={totalUsersCount} pageSize={pageSize}  onPageChanged={onPageChanged} currentPage={currentPage} /> */}
       <div>
-        { 
-          isFetching 
-            ? <Preloader />
-            : users.map((u: TUser) => {
-                return (
-                  <User
-                    key={u.id}
-                    user={u}
-                    onFollow={onFollow}
-                    onUnfollow={onUnfollow}
-                  />
-                );
+        <Row>
+          {isFetching ? (
+            <Preloader />
+          ) : (
+            users.map((u: TUser) => {
+              return (
+                <User
+                  key={u.id}
+                  user={u}
+                  onFollow={onFollow}
+                  onUnfollow={onUnfollow}
+                />
+              );
             })
-        }
+          )}
+        </Row>
       </div>
     </div>
   );

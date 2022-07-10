@@ -5,6 +5,7 @@ import { TUser } from "../../types/types";
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { getFollowingInProgress } from "../../redux/users-selectors";
+import { Button, Col } from "antd";
 
 type TProps = {
   user: TUser
@@ -17,6 +18,7 @@ const User: FC<TProps> = ({user, onFollow, onUnfollow}) => {
   const followingInProgress = useSelector(getFollowingInProgress)
 
   return (
+    <Col span={24} md={12}>
     <div className={s.user} key={user.id}>
       <div className={s.imageCol}>
         <NavLink to={"/profile/" + user.id}>
@@ -26,9 +28,9 @@ const User: FC<TProps> = ({user, onFollow, onUnfollow}) => {
             alt={"Profile avatar"}
           />
         </NavLink>
-        <div>
+        <div className={s.buttons}>
           {user.followed ? (
-            <button
+            <Button
               onClick={() => {
                 onUnfollow(user.id);
               }}
@@ -36,9 +38,9 @@ const User: FC<TProps> = ({user, onFollow, onUnfollow}) => {
               disabled={followingInProgress.some((id: number) => id === user.id)}
             >
               Unfollow
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               onClick={() => {
                 onFollow(user.id);
               }}
@@ -46,27 +48,30 @@ const User: FC<TProps> = ({user, onFollow, onUnfollow}) => {
               disabled={followingInProgress.some((id) => id === user.id)}
             >
               Follow
-            </button>
+            </Button>
           )}
         </div>
       </div>
       <div className={s.mainCol}>
         <div className={s.mainLeft}>
-          <div className={s.name}>{user.name}</div>
+          <NavLink to={"/profile/" + user.id}>
+            <div className={s.name}>{user.name}</div>
+          </NavLink>
           <div className={s.status}>{user.status}</div>
         </div>
-        <div className={s.mainRight}>
+{/*         <div className={s.mainRight}>
           <div className={s.location}>
             <div className={s.city}>
-              <span>{"user.location.city"}</span>,
+              <span>{user.location.city}</span>,
             </div>
             <div className={s.country}>
-              <span>{"user.location.country"}</span>
+              <span>{user.location.country}</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
+    </Col>
   );
 };
 

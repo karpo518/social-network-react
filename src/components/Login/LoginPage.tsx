@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { InjectedFormProps, reduxForm } from "redux-form";
@@ -57,9 +58,9 @@ const LoginForm: FC<TFormProps> = (props) => {
   return (
     <form onSubmit={props.handleSubmit} className={s.form}>
 
-      { createField<TFormData>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input'}) }
-      { createField<TFormData>('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input'}) }
-      { createField<TFormData>('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input'}) }
+      { createField<TFormData>('E-mail', 'email', [required], InputArea, {type: 'text', fieldType: 'input', autoComplete: 'on'}) }
+      { createField<TFormData>('Password', 'password', [required], InputArea, {type: 'password', fieldType: 'input', autoComplete: 'on'}) }
+      { createField<TFormData>('API key', 'apiKey', [required], InputArea, {type: 'text', fieldType: 'input', autoComplete: 'on'}) }
 
       { 
         props.captchaUrl && 
@@ -79,7 +80,7 @@ const LoginForm: FC<TFormProps> = (props) => {
       </div>
       {props.error && <div className={s.errors} > {props.error}</div>}
       <div>
-        <button className={s.submit}>Login</button>
+        <Button type="primary" htmlType="submit" className={s.submit}>Login</Button>
       </div>
     </form>
   );

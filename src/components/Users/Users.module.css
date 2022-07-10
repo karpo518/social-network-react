@@ -19,13 +19,18 @@
 
 .fieldItem .term {
     padding: 5px;
-    width: 200px;
+    width: 220px;
     margin-top: 5px;
+    height: 35px;
+    border-color: #333;
 }
 
 .fieldItem .isFriend {
-    padding: 5px;
-    width: 200px;
+    padding: 5px; 
+    width: 220px;
     margin-top: 5px;
+    border-width: 2px;
+    background-color: transparent;
+    border-color: #333;
 }
 

@@ -8,6 +8,7 @@ import { sGetStatus } from "../../../redux/profile-selectors";
 import { TAppState } from "../../../redux/redux-store";
 import { TProfile } from "../../../types/types";
 import Preloader from "../../common/Preloader/Preloader";
+import MyPostsContainer from "../MyPosts/MyPostsContainer";
 import ProfileData from "./ProfileData";
 import ProfileDataForm from "./ProfileDataForm";
 import s from "./ProfileInfo.module.css";
@@ -82,6 +83,8 @@ const ProfileInfo: FC<TProps> = ({profile, isOwner }) => {
                            isOwner={isOwner}
                            activateProfileEditMode={activateProfileEditMode} />
         }
+
+        { isOwner && !editMode && <MyPostsContainer /> }
 
       </div>
     </div>
