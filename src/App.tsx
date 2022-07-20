@@ -8,19 +8,22 @@ import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
 import Page404 from './components/common/Page404/Page404';
 import PopupMessage from './components/common/PopupMessage/PopupMessage';
 import Preloader from './components/common/Preloader/Preloader';
-import DialogsContainer from './components/Dialogs/DialogsContainer';
 import HeaderContent from './components/Header/HeaderContent';
-import { LoginPage } from './components/Login/LoginPage';
-import Music from './components/Music/Music';
-import News from './components/News/News';
-import { ProfilePage } from './components/Profile/ProfilePage';
-import Settings from './components/Settings/Settings';
 import Sidebar from './components/Sidebar/Sidebar';
-import { UsersPage } from './components/Users/UsersPage';
 import './index.css';
 import { initializeApp, TAppActions } from "./redux/app-reducer";
 import { getInitialized } from './redux/app-selectors';
 import store, { TAppState } from "./redux/redux-store";
+
+// lazy components
+const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer') )
+const ProfilePage = React.lazy(() => import('./components/Profile/ProfilePage').then(module => ({ default: module.ProfilePage })))
+const UsersPage = React.lazy(() => import('./components/Users/UsersPage').then(module => ({ default: module.UsersPage })))
+const News = React.lazy(() => import('./components/News/News') )
+const Music = React.lazy(() => import('./components/Music/Music') )
+const Settings = React.lazy(() => import('./components/Settings/Settings') )
+const LoginPage = React.lazy( () => import('./components/Login/LoginPage').then(module => ({ default: module.LoginPage })))
+const ChatPage = React.lazy( () => import('./pages/Chat/ChatPage').then(module => ({ default: module.ChatPage })))
 
 const { Header, Content, Footer } = Layout;
 
@@ -99,6 +102,7 @@ const App: FC = () => {
                       <Route path="/news" element={<News />} />
                       <Route path="/music" element={<Music />} />
                       <Route path="/settings" element={<Settings />} />
+                      <Route path="/chat" element={<ChatPage />} />
                       <Route path="/login" element={<LoginPage />} />
                       <Route path="*" element={<Page404 />} />
                     </Routes>
@@ -122,13 +126,11 @@ const App: FC = () => {
 
 const SamuraiJSApp: FC = (props) => {
 
-  return <React.StrictMode>
-  <BrowserRouter basename={process.env.PUBLIC_URL} >
+  return <BrowserRouter basename={process.env.PUBLIC_URL} >
     <Provider store={store}>
       <App />
     </Provider>
   </BrowserRouter>
-</React.StrictMode> 
 }
 
 export default SamuraiJSApp;

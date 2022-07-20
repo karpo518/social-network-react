@@ -1,0 +1,19 @@
+.submitWrap {
+    margin-top: 20px;
+}
+
+.messages {
+
+    height: 300px;
+    overflow-y: auto;
+}
+
+.message {
+    border-bottom: 1px solid #333;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.formWrap {
+    margin-top: 40px;
+}
