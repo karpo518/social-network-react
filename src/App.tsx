@@ -66,7 +66,8 @@ const App: FC = () => {
     if(appStatus !== EAppStatus.broken) {
       dispatch(initializeApp())
     }
-  },[appStatus]);
+    dispatch(initializeApp())
+  },[dispatch, appStatus]);
 
   return  (
     <div className={'wrapper'} >

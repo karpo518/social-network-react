@@ -37,7 +37,7 @@ export const Messages: FC= () => {
         ))}
         <div className={s.chatBottom} ref={chatBottomRef}></div>
       </div>
-      <div className={s.isAutoScrollWrap + ' ' + 'isAutoScrollWrap'}>
+      <div className={s.isAutoScrollWrap + ' isAutoScrollWrap'}>
         <Checkbox checked={isAutoScroll} onChange={(e: CheckboxChangeEvent) => setIsAutoScroll(!isAutoScroll) }>Включить автоскролл</Checkbox>
       </div>
     </>
