@@ -1,14 +1,22 @@
-import { TChatMessage } from './../components/Chat/Messages';
-import { chatAPI } from './../api/chat-api';
-import { InferValueTypes, TBaseThunk } from "./redux-store";
+import { v1 } from 'uuid';
 import { Dispatch } from 'react';
+import { ThunkDispatch } from 'redux-thunk';
+import { chatAPI } from './../api/chat-api';
+import { TChatMessage } from './../components/Chat/Messages';
+import { activateBrokenStatus, TAppActions } from './app-reducer';
+import { InferValueTypes, TAppState, TBaseThunk } from "./redux-store";
+
 
 const chatAT = {
-  SET_MESSAGES: 'MY-APP/CHAT/SET_MESSAGES' as const
+  SET_MESSAGES: 'MY-APP/CHAT/SET_MESSAGES' as const,
+  SET_STATUS: 'MY-APP/CHAT/SET_STATUS' as const
 }
+
+export type TWsStatus = 0 | 1 | 2 | 3
 
 let initialState = {
     messages: [] as Array<TChatMessage>,
+    status: WebSocket.CLOSED as TWsStatus
 };
 
 type initialStateType = typeof initialState
@@ -17,11 +25,17 @@ const chatReducer = (state: initialStateType = initialState, action: TChatAction
     
     switch(action.type) {
         case chatAT.SET_MESSAGES: {
+          console.log(state.messages)
+            let newMessages = action.payload.newMessages.map(m => ({...m, id: v1() }))
             return action.payload.replaceMode
-              ? {...state, messages: [...action.payload.messages] }
-              : {...state, messages: [...state.messages, ...action.payload.messages] }
+              ? {...state, messages: [...newMessages].filter((item, index, array) => index >= (array.length - 100)) }
+              : {...state, messages: [...state.messages, ...newMessages].filter((item, index, array) => index >= (array.length - 100)) }
 
         }
+        case chatAT.SET_STATUS: {
+          return {...state, status: action.payload.newStatus }
+
+      }
         default:
             return {...state};
     }
@@ -30,7 +44,8 @@ const chatReducer = (state: initialStateType = initialState, action: TChatAction
 export type TChatActions = ReturnType<InferValueTypes<typeof chatAC>>
 
 export const chatAC = {
-  setMessages: (messages: Array<TChatMessage>, replaceMode = false) => ({type: chatAT.SET_MESSAGES, payload: {messages, replaceMode} }),
+  setMessages: (newMessages: Array<TChatMessage>, replaceMode = false) => ({type: chatAT.SET_MESSAGES, payload: {newMessages, replaceMode} }),
+  setStatus: (newStatus: TWsStatus) => ({type: chatAT.SET_STATUS, payload:{newStatus} }),
 }
  
 export const setMessagesPromise = (messages: Array<TChatMessage>): TBaseThunk<TChatActions> => {
@@ -54,17 +69,33 @@ const newMessageHandler = (dispatch: Dispatch<TChatActions> ) => {
   return _newMessageHandler
 }
 
+let _errorHandler: (e: Event) => void
+
+const errorHandler = (dispatch: ThunkDispatch<TAppState, unknown, TAppActions> ) => {
+  if(!_errorHandler) {
+    _errorHandler = (e: Event) => { 
+      console.log('Возникла ошибка!')
+      console.log(e)
+      chatAPI.stop()
+      dispatch(activateBrokenStatus())
+    }
+  }
+  return _errorHandler
+}
+
 
 export const startMessagesListening = (): TBaseThunk<TChatActions, void> => {
   return (dispatch) => {
       chatAPI.start()
-      chatAPI.subscribeNewMessages(newMessageHandler(dispatch))
+      // chatAPI.subscribe('errorOccurred', errorHandler(dispatch))
+      chatAPI.subscribe('messagesReceived', newMessageHandler(dispatch))
   }
 }
 
 export const stopMessagesListening = (): TBaseThunk<TChatActions, void> => {
   return (dispatch) => {
-      chatAPI.unsubscribeNewMessages(newMessageHandler(dispatch))
+      chatAPI.unsubscribe('messagesReceived', newMessageHandler(dispatch))
+      // chatAPI.unsubscribe('errorOccurred', errorHandler(dispatch))
       chatAPI.stop()
   }
 }

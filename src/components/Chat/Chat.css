@@ -1,0 +1,3 @@
+#root .isAutoScrollWrap .ant-checkbox-wrapper:last-child {
+    margin-left: 0px;
+}

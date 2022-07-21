@@ -1,11 +1,13 @@
 import { Button } from "antd";
 import { Form, Formik, FormikHelpers } from "formik";
-import { FC, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { FC, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { chatAPI } from "../../api/chat-api";
-import { sendMessage, TChatActions } from "../../redux/chat-reducer";
+import { chatAC, sendMessage, TChatActions, TWsStatus } from "../../redux/chat-reducer";
+import { SGetStatus } from "../../redux/chat-selectors";
 import { TAppState } from "../../redux/redux-store";
+import { showPopup } from "../../utils/popup-helpers";
 import { required } from "../../utils/validators/validators";
 import { createFormikField, FormikInputArea } from "../common/FormControls/FormControls";
 import s from './Chat.module.css';
@@ -18,24 +20,26 @@ export const AddMessageForm: FC = () => {
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TChatActions>>();
 
-  const [wsReady, setWsReady] = useState(chatAPI.isReady())
+  const status = useSelector(SGetStatus)
 
   const submitHandler = (values: TFormData, helpers: FormikHelpers<TFormData> ) => {
 
-    if(wsReady) {
+    if(status === WebSocket.OPEN) {
       dispatch(sendMessage(values.message))
       helpers.setSubmitting(false);
       helpers.resetForm()
     }
+    else {
+      showPopup('Не удалось отправить сообщение, так как не удаётся подключиться к серверу!')
+    }
   }
 
-  const changeWsStatusHandler= (newStatus: 'open' | 'close') => {
-    const wsReady = newStatus === 'open' ? true : false;
-    setWsReady(wsReady)
+  const changeWsStatusHandler= (newStatus: TWsStatus) => {
+      dispatch(chatAC.setStatus(newStatus))
   }
 
   useEffect(() => {
-    let unsubscribe = chatAPI.subscribeNewStatus(changeWsStatusHandler)
+    let unsubscribe = chatAPI.subscribe('statusChanged', changeWsStatusHandler)
     return () => { unsubscribe() }
   });
   
@@ -56,7 +60,7 @@ export const AddMessageForm: FC = () => {
                     { createFormikField<TFormData>('Write text here..', 'message', [required], FormikInputArea, {fieldType: 'textarea'}) }
                     </div>
                     <div className={s.submitWrap} >
-                        <Button disabled={!wsReady} type="primary" htmlType="submit">Send</Button>
+                        <Button disabled={status !== WebSocket.OPEN} type="primary" htmlType="submit">Send</Button>
                     </div>
                 </Form>
             )

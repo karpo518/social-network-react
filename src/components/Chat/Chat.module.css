@@ -17,3 +17,11 @@
 .formWrap {
     margin-top: 40px;
 }
+
+.isAutoScrollWrap {
+    margin-top: 15px;
+}
+
+.isAutoScrollWrap label{
+    font-weight: bold;
+}

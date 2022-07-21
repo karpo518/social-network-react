@@ -1,12 +1,25 @@
 import { TChatMessage } from "../components/Chat/Messages";
+import { TWsStatus } from "../redux/chat-reducer";
+
+type TEventNames = 'messagesReceived' | 'statusChanged' | 'errorOccurred'
 
 type TNewMessagesSubscriber = (messages: TChatMessage[]) => void
 
-let newMessagesSubscribers = [] as TNewMessagesSubscriber[]
+type TChangeStatusSubscriber = (newStatus: TWsStatus) => void
 
-type TChangeStatusSubscriber = (newStatus: 'open' | 'close') => void
+type TErrorSubscriber = (e: Event) => void
 
-let changeStatusSubscribers = [] as TChangeStatusSubscriber[]
+type TEventSubscribers = {
+    messagesReceived: TNewMessagesSubscriber[],
+    statusChanged: TChangeStatusSubscriber[]
+    errorOccurred: TErrorSubscriber[]
+}
+
+let eventSubscribers: TEventSubscribers = {
+    messagesReceived: [],
+    statusChanged: [],
+    errorOccurred: [],
+}
 
 const wsUrl = 'wss://social-network.samuraijs.com/handlers/ChatHandler.ashx'
 
@@ -17,6 +30,7 @@ export const createChannel = () => {
         removeChannel()
     }
     ws = new WebSocket(wsUrl)
+    ws.addEventListener('error', errorHandler)
     ws.addEventListener('open', changeStatusHandler)
     ws.addEventListener('message', newMessagesHandler)
     ws.addEventListener('close', changeStatusHandler)
@@ -27,32 +41,27 @@ export const removeChannel = () => {
     ws?.removeEventListener('open', changeStatusHandler)
     ws?.removeEventListener('message', newMessagesHandler)
     ws?.removeEventListener('close', changeStatusHandler)
+    ws?.removeEventListener('error', errorHandler)
 }
 
-/* export const closeHandler = () => { 
-    setTimeout(() => { 
-        ws?.removeEventListener('open', changeStatusHandler)
-        ws?.removeEventListener('message', newMessagesHandler)
-        ws?.removeEventListener('close', changeStatusHandler)
-        createChannel()
-    }, 3000) 
-} */
-
 export const newMessagesHandler = (e: MessageEvent) => { 
-    // ws?.addEventListener('message', onNewMessages)
     const newMessages = JSON.parse(e.data)
-    newMessagesSubscribers.forEach((callback: TNewMessagesSubscriber) => { callback(newMessages) } )
+    eventSubscribers.messagesReceived.forEach((callback: TNewMessagesSubscriber) => { callback(newMessages) } )
 }
 
 export const changeStatusHandler = (e: Event | CloseEvent) => { 
     
-    let newStatus = (e.type === 'open') ? 'open' : 'close' as 'open' | 'close'
+    let newStatus = ((e.type === 'open') ? WebSocket.OPEN : WebSocket.CLOSED) as TWsStatus
 
-    changeStatusSubscribers.forEach((callback: TChangeStatusSubscriber) => { callback(newStatus) } )
+    eventSubscribers.statusChanged.forEach((callback: TChangeStatusSubscriber) => { callback(newStatus) } )
 
-    if(newStatus === 'close') {
+    if(newStatus === WebSocket.CLOSED) {
         setTimeout(createChannel, 3000)
     }
+}
+
+export const errorHandler = (e: Event) => {
+    eventSubscribers.errorOccurred.forEach((callback: TErrorSubscriber) => { callback(e) } )
 }
 
 export const chatAPI = {
@@ -66,18 +75,20 @@ export const chatAPI = {
             removeChannel()
         }
     },
-    isReady() {
-        return ws?.readyState === WebSocket.OPEN
+    status() {
+        return ws ? ws.readyState : WebSocket.CLOSED
     },
-    subscribeNewMessages(callback: TNewMessagesSubscriber) {
-        newMessagesSubscribers.push(callback)
+    subscribe(eventName: TEventNames, callback: TNewMessagesSubscriber | TChangeStatusSubscriber | TErrorSubscriber) {
+        // @ts-ignore
+        eventSubscribers[eventName].push(callback)
+        return () => {
+            // @ts-ignore
+            eventSubscribers[eventName] = eventSubscribers[eventName].filter((s) => s !== callback)
+        }
     },
-    unsubscribeNewMessages(callback: TNewMessagesSubscriber) {
-        newMessagesSubscribers = newMessagesSubscribers.filter(s => s !== callback)
-    },
-    subscribeNewStatus(callback: TChangeStatusSubscriber) {
-        changeStatusSubscribers.push(callback)
-        return () => { changeStatusSubscribers = changeStatusSubscribers.filter(s => s !== callback) }
+    unsubscribe(eventName: TEventNames, callback: TNewMessagesSubscriber | TChangeStatusSubscriber | TErrorSubscriber) {
+        // @ts-ignore
+        eventSubscribers[eventName] = eventSubscribers[eventName].filter((s) => s !== callback)
     },
     sendMessage(message: string) {
         ws?.send(message)

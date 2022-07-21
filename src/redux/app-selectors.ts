@@ -1,7 +1,11 @@
 import { TAppState } from './redux-store';
 
-export const getInitialized = (state: TAppState) => {
-    return  state.app.initialized;
+export const SGetAppStatus = (state: TAppState) => {
+    return  state.app.appStatus;
+}
+
+export const SGetErrorMessage = (state: TAppState) => {
+    return  state.app.errorMessage;
 }
 
 /* export const getBreadcrumbs = (state: TAppState) => {

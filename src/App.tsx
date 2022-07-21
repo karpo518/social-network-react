@@ -11,8 +11,9 @@ import Preloader from './components/common/Preloader/Preloader';
 import HeaderContent from './components/Header/HeaderContent';
 import Sidebar from './components/Sidebar/Sidebar';
 import './index.css';
-import { initializeApp, TAppActions } from "./redux/app-reducer";
-import { getInitialized } from './redux/app-selectors';
+import { ErrorPage } from './pages/Error/ErrorPage';
+import { EAppStatus, initializeApp, TAppActions } from "./redux/app-reducer";
+import { SGetAppStatus } from './redux/app-selectors';
 import store, { TAppState } from "./redux/redux-store";
 
 // lazy components
@@ -34,7 +35,7 @@ type TTextMessage = {
 
 const App: FC = () => {
 
-  const initialized = useSelector(getInitialized)
+  const appStatus = useSelector(SGetAppStatus)
 
   const dispatch = useDispatch<ThunkDispatch<TAppState, unknown, TAppActions>>();
 
@@ -62,14 +63,16 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(initializeApp());
-  });
+    if(appStatus !== EAppStatus.broken) {
+      dispatch(initializeApp())
+    }
+  },[appStatus]);
 
   return  (
-    <div>
-      {!initialized
-      ? <Preloader />
-      : (
+    <div className={'wrapper'} >
+      { appStatus === EAppStatus.not_inited && <Preloader /> }
+      { appStatus === EAppStatus.broken && <ErrorPage /> }
+      { appStatus === EAppStatus.inited && (
         <Layout>
           <Header className="header">
             <HeaderContent />
